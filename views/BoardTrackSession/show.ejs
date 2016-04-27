@@ -1,0 +1,29 @@
+<form class="show">
+	<div class="form-group">
+		<h2><%= __('a BoardTrackSession') %></h2>
+		
+	<div class="form-group" style="width: 400px;">
+	<label><%= __('Track Athlete Id') %></label>
+	<input value="<%= BoardTrackSession.TrackAthleteId %>" name="TrackAthleteId" type="text" class="form-control" disabled/>
+	</div>
+
+	<div class="form-group" style="width: 400px;">
+	<label><%= __('Board Serial Number') %></label>
+	<input value="<%= BoardTrackSession.BoardSerialNumber %>" name="BoardSerialNumber" type="text" class="form-control" disabled/>
+	</div>
+
+	<div class="form-group" style="width: 400px;">
+	<label><%= __('Board Location') %></label>
+	<input value="<%= BoardTrackSession.BoardLocation %>" name="BoardLocation" type="text" class="form-control" disabled/>
+	</div>
+
+	<div class="form-group" style="width: 400px;">
+	<label><%= __('Board Detail Id') %></label>
+	<input value="<%= BoardTrackSession.BoardDetailId %>" name="BoardDetailId" type="text" class="form-control" disabled/>
+	</div>
+
+</div>
+</div>
+<a href="/BoardTrackSession/edit/<%=BoardTrackSession.id %>" class="btn btn-default"><%= __('Edit') %></a> |
+<a href="/BoardTrackSession"><%= __('Back to list') %></a>
+</form>

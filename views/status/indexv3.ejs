@@ -1,0 +1,321 @@
+<link href="styles/bootstrap.min.css" rel="stylesheet" type="text/css">
+<script src="../dists/jsoneditor.js"></script>
+
+<script src="http://bgrins.github.io/filereader.js/filereader.js"></script>
+<script src="http://eligrey.com/demos/FileSaver.js/FileSaver.js"></script>
+
+<div class="container">
+  <h1><%= title %></h1>
+  <hr>
+
+  <select id="comSelected" class="form-control" required="required" name="ComSelect">
+    <% _.forEach(listSerialPorts, function(listSerialPorts) { %>
+    <option value="<%= listSerialPorts.comName %>"><%= listSerialPorts.comName %></option>
+    <% }) %>
+  </select>
+  <br>
+  <button id="submitCOM" type="submit" class="btn btn-success btn-lg pull-right">Submit</button>
+
+  <hr>
+  <p>
+    Load a JSON document: <input type="file" id="loadDocument" value="Load"/>
+  </p>
+
+  <p>
+    Save a JSON document: <input type="button" id="saveDocument" value="Save"/>
+  </p>
+
+  <p>
+    <input type="button" id="saveJSON" value="SaveJSON"/>
+  </p>
+
+  <div id="jsoneditor"></div>
+</div>
+
+<script>
+  $("#submitCOM").click(function () {
+    getAllInformation($('#comSelected').val());
+  });
+
+  $("#saveJSON").click(function () {
+    saveJSON();
+  });
+
+  function saveJSON() {
+    var list = diffJSON(jsonData, editor.getValue());
+
+    console.log(jsonData);
+    console.log(editor.getValue());
+    console.log(list);
+
+    $.ajax({
+      url: "/status/update",
+      type: "post",
+      data: {listSensors: JSON.stringify(list)},
+      success: function (data, textStatus, jqXHR) {
+        alert("Guardado!");
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        console.log("ERROR");
+      }
+    });
+  }
+
+  var jsonData;
+  var editor;
+  function getAllInformation(comSelected) {
+    console.log(comSelected);
+    $.ajax({
+      url: "/status/getAllInformation",
+      type: "post",
+      data: {portCom: comSelected},
+      success: function (data, textStatus, jqXHR) {
+
+        console.log(data);
+
+        var container = document.getElementById('jsoneditor');
+        container.innerHTML = '';
+
+        var options = {
+          search: false,
+          history: false,
+          mode: 'tree',
+          editable: function (node) {
+            switch (node.field) {
+              case 'enabled':
+                return {
+                  field: false,
+                  value: true
+                };
+
+              case 'fa':
+                return {
+                  field: false,
+                  value: true
+                };
+
+              default:
+                return {
+                  field: false,
+                  value: false
+                };
+            }
+          }
+        };
+
+        jsonData = JSON.parse(data);
+        //editor = new JSONEditor(container, options, jsonData);
+
+        //editor.expandAll();
+
+
+        createVisualization(container, jsonData);
+
+
+        // Load a JSON document
+        FileReaderJS.setupInput($('#loadDocument')[0], {
+          readAsDefault: 'Text',
+          on: {
+            load: function (event, file) {
+              editor.setText(event.target.result);
+            }
+          }
+        });
+
+        // Save a JSON document
+        $('#saveDocument').click(function updateSensors() {
+          console.log(editor.getValue());
+          var blob = new Blob([editor.getValue()], {type: 'application/json;charset=utf-8'});
+          saveAs(blob, 'document.json');
+
+          saveJSON();
+        });
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        console.log("ERROR");
+      }
+    });
+  }
+
+  function createVisualization(container, jsonData) {
+//<button id='submit'>Submit (console.log)</button>
+
+    jsonData = [
+      {
+        "id": "1653518100",
+        "listPeers": [
+          {
+            "idPeer": "0",
+            "type": "0",
+            "listConf": [
+              {
+                "enabled": "true",
+                "fa": "0"
+              }
+            ]
+          },
+          {
+            "idPeer": "1",
+            "type": "0",
+            "listConf": [
+              {
+                "enabled": "true",
+                "fa": "0"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "0018153561",
+        "listPeers": [
+          {
+            "idPeer": "0",
+            "type": "0",
+            "listConf": [
+              {
+                "enabled": "true",
+                "fa": "0"
+              }
+            ]
+          },
+          {
+            "idPeer": "1",
+            "type": "0",
+            "listConf": [
+              {
+                "enabled": "true",
+                "fa": "0"
+              }
+            ]
+          }
+        ]
+      }
+    ];
+
+    // Initialize the editor
+    editor = new JSONEditor(container, {
+      ajax: true,
+      schema: {
+        "type": "array",
+        "title": "Sensors",
+        "format": "tabs",
+        "items": {
+          "title": "Sensors",
+          "type": "object",
+          "properties": {
+            "id": {
+              "readonly": true,
+              "type": "string"
+            },
+            "listPeers": {
+              "type": "array",
+              "format": "tabs",
+              "title": "ListPeers",
+              "items": {
+                "type": "object",
+                "title": "Peer",
+                "properties": {
+                  "idPeer": {
+                    "readonly": true,
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      0,
+                      1,
+                      2
+                    ],
+                    "default": 0
+                  },
+                  "listConf": {
+                    "type": "array",
+                    "format": "table",
+                    "title": "ListConf",
+                    "uniqueItems": true,
+                    "items": {
+                      "type": "object",
+                      "title": "Conf",
+                      "properties": {
+                        "enabled": {
+                          "type": "string",
+                          "enum": [
+                            "true",
+                            "false"
+                          ]
+                        },
+                        "fa": {
+                          "type": "string",
+                          "enum": [
+                            0,
+                            10,
+                            20
+                          ],
+                          "default": 0
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+
+      // Seed the form with a starting value
+      startval: jsonData,
+
+      disable_array_add: true,
+      disable_array_delete: true,
+      disable_array_reorder: true,
+      disable_edit_json: true,
+      disable_properties: true,
+      iconlib: "bootstrap3",
+
+      // Disable additional properties
+      no_additional_properties: true,
+
+      // Require all properties by default
+      required_by_default: true,
+      theme: 'bootstrap3'
+    });
+    // Validate
+    var errors = editor.validate();
+    if (errors.length) {
+      // Not valid
+    }
+  }
+</script>
+
+<script>
+  // http://jsfiddle.net/muJEu/169/
+  function isEmpty(o) {
+    for (var p in o) {
+      if (o.hasOwnProperty(p)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  function diffJSON(obj1, obj2) {
+    var ret = {}, rett;
+    for (var i in obj2) {
+      rett = {};
+      if (typeof obj2[i] === 'object') {
+        rett = diffJSON(obj1[i], obj2[i]);
+        if (!isEmpty(rett)) {
+          ret[i] = rett
+        }
+      } else {
+        // Inclui idPeer
+        if (!obj1 || !obj1.hasOwnProperty(i) || obj2[i] !== obj1[i] || i == 'idPeer') {
+          ret[i] = obj2[i];
+        }
+      }
+    }
+    return ret;
+  }
+</script>

@@ -1,0 +1,172 @@
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+<script src="/js/geral.js"></script>
+<script src='/js/mapbox.js'></script>
+<!--STYLES-->
+<link href='https://api.tiles.mapbox.com/mapbox.js/v2.1.4/mapbox.css' rel='stylesheet'/>
+<link rel="stylesheet" href="/styles/slider.css">
+<link rel="stylesheet" type="text/css" media="all" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/base/jquery-ui.css">
+<link rel="stylesheet" type="text/css" media="all" href="http://fonts.googleapis.com/css?family=Acme">
+
+<style>
+    .rTableRow {
+        clear: both;
+    }
+
+    .rTableCell {
+        float: left;
+        padding: 3px 1.8%;
+    }
+    #map {
+        height: 500px;
+    }
+</style>
+<!--STYLES-->
+
+<div class="container">
+    <section class="main">
+        <div>
+            <h1><%= title %></h1>
+
+            <div class="rTable">
+                <div class="rTableRow">
+                    <div class="rTableCell"><select id="select_ID1"></select></div>
+                    <div class="rTableCell"><select id="select_SensorID1"></select></div>
+                    <div class="rTableCell">
+                        <button onclick="getData($('#select_ID1').val(), $('#select_SensorID1').val(), 1, callbackData);">
+                            OK
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="rTableRow">
+                <div id="defaultval">
+                        <span style="align:left;" id="currentval">0</span>
+                    </div>
+                    <div class="col-sm-3">
+                        <button type="button" id="play" class="btn btn-success">Play</button>
+                        <button type="button" id="pause" class="btn btn-info">Pause</button>
+                        <button type="button" id="stop" class="btn btn-danger">Stop</button>
+                    </div>
+                    <div class="col-sm-9">
+                        <div id="defaultslide"></div>
+                    </div>
+            </div>
+        </div>
+        <br>
+        <br>
+        <div id='map'></div>
+    </section>
+</div>
+
+<!--SCRIPTS-->
+<script>
+    var marker;
+    var idMarker = 0;
+    var slider;
+    var sliderVel = 500;
+    var featureLayer;
+    var coordenates;
+    var geoJSON;
+
+    L.mapbox.accessToken = 'pk.eyJ1IjoicmljYXJkbzIwMTUiLCJhIjoiXzZ4YW4yYyJ9.zvOPYRixxGHhrGK4uGmOgw';
+
+    function callbackData(result) {
+        var map = L.mapbox.map('map', 'examples.map-i86nkdio')
+                .setView([40.633577554576874, -8.659629821777344], 14);
+        coordenates = [];
+        result.forEach(function (d) {
+            var latlon = d["DataCollectionValue"].split(',');
+            coordenates.push([latlon[1], latlon[0]]);
+        });
+
+        geoJSON = {
+            "type": "Feature",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": coordenates
+            },
+            "properties": {
+                "title": "Mapbox",
+                "description": "TESTE",
+                "style": {
+                    "color": "#004070",
+                    "weight": "4",
+                    "opacity": "0.9"
+                }
+            }
+        };
+        //map.removeLayer(featureLayer);
+
+
+        featureLayer = L.mapbox.featureLayer()
+                .setGeoJSON(geoJSON)
+                .addTo(map);
+
+        marker = L.marker(L.latLng(
+                coordenates[idMarker][1],
+                coordenates[idMarker][0]), {
+            icon: L.mapbox.marker.icon({
+                'marker-color': '#f86767'
+            })
+        });
+
+
+        slider = createSlider("#defaultslide", 0, coordenates.length);
+        slider.on("slide", function (event, ui) {
+            changeLocationMarker(ui.value);
+        });
+
+        marker.addTo(map);
+
+    }
+
+    function changeLocationMarker(id) {
+        $('#currentval').html(id);
+        marker.setLatLng(L.latLng(
+                coordenates[id][1],
+                coordenates[id][0]));
+        idMarker = id;
+    }
+
+</script>
+<!--SCRIPTS-->
+
+<script>
+    var playing = false;
+    setInterval(function () {
+        if (!playing)
+            return;
+        idMarker = ++idMarker % coordenates.length;
+        slider.slider('value', idMarker);
+        $('#currentval').html(idMarker);
+        changeLocationMarker(idMarker);
+    }, sliderVel);
+
+    $("#play").click(function () {
+        playing = true;
+    });
+    $("#pause").click(function () {
+        playing = false;
+    });
+    $("#stop").click(function () {
+        playing = false;
+        idMarker = 0;
+        slider.slider('value', idMarker);
+        $('#currentval').html(idMarker);
+        changeLocationMarker(idMarker);
+    });
+
+</script>
+
+<script>
+    getData(18, 0, 1, callbackData);
+</script>
+<script>
+    //INIT MAP
+    selectTrackSession("#select_ID1");
+
+    $("#select_ID1").change(function () {
+        $("#select_SensorID1").find('option').remove();
+        getListSensor("#select_SensorID1", $(this).val());
+    });
+</script>

@@ -1,0 +1,24 @@
+<form class="show">
+	<div class="form-group">
+		<h2><%= __('a OnGoingDataCollection') %></h2>
+		
+	<div class="form-group" style="width: 400px;">
+	<label><%= __('Track Session Configuration Id') %></label>
+	<input value="<%= OnGoingDataCollection.TrackSessionConfigurationId %>" name="TrackSessionConfigurationId" type="text" class="form-control" disabled/>
+	</div>
+
+	<div class="form-group" style="width: 400px;">
+	<label><%= __('Data Collection Time') %></label>
+	<input value="<%= OnGoingDataCollection.DataCollectionTime %>" name="DataCollectionTime" type="text" class="form-control" disabled/>
+	</div>
+
+	<div class="form-group" style="width: 400px;">
+	<label><%= __('Data Collection Value') %></label>
+	<input value="<%= OnGoingDataCollection.DataCollectionValue %>" name="DataCollectionValue" type="text" class="form-control" disabled/>
+	</div>
+
+</div>
+</div>
+<a href="/OnGoingDataCollection/edit/<%=OnGoingDataCollection.id %>" class="btn btn-default"><%= __('Edit') %></a> |
+<a href="/OnGoingDataCollection"><%= __('Back to list') %></a>
+</form>

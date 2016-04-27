@@ -1,0 +1,39 @@
+	<form action="/TrackAthlete/update/<%=TrackAthlete.id%>" method="POST" class="edit">
+	<div class="form-group">
+		<h2><%= __('editing a TrackAthlete') %></h2>
+	<div class="form-group" style="width: 400px;">
+	<label><%= __('Session Id') %></label>
+	<input value="<%= TrackAthlete.SessionId %>" name="SessionId" type="text" class="form-control"/>
+	</div>
+
+	<div class="form-group" style="width: 400px;">
+	<label><%= __('Start Time') %></label>
+	<input value="<%= TrackAthlete.StartTime %>" name="StartTime" type="text" class="form-control"/>
+	</div>
+
+	<div class="form-group" style="width: 400px;">
+	<label><%= __('End Time') %></label>
+	<input value="<%= TrackAthlete.EndTime %>" name="EndTime" type="text" class="form-control"/>
+	</div>
+
+	<div class="form-group" style="width: 400px;">
+	<label><%= __('Session Type Id') %></label>
+	<input value="<%= TrackAthlete.SessionTypeId %>" name="SessionTypeId" type="text" class="form-control"/>
+	</div>
+
+	<div class="form-group" style="width: 400px;">
+	<label><%= __('Sport Type Id') %></label>
+	<input value="<%= TrackAthlete.SportTypeId %>" name="SportTypeId" type="text" class="form-control"/>
+	</div>
+
+	<div class="form-group" style="width: 400px;">
+	<label><%= __('Athlete Id') %></label>
+	<input value="<%= TrackAthlete.AthleteId %>" name="AthleteId" type="text" class="form-control"/>
+	</div>
+
+		</div>
+		<input type="submit" value="<%= __('Update') %>" class="btn btn-default"/>
+		<a href="/TrackAthlete/show/<%=TrackAthlete.id %>" class="btn btn-danger"><%= __('Cancel') %></a>
+	</form>
+	
+	

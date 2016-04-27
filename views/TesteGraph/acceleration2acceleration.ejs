@@ -1,0 +1,593 @@
+<script src="/js/d3.min.js"></script>
+<script src="/js/geral.js"></script>
+<style>
+    .rTableRow {
+        clear: both;
+    }
+
+    .rTableCell {
+        float: left;
+        padding: 3px 1.8%;
+    }
+
+    svg {
+        font: 10px sans-serif;
+    }
+
+    .brush .extent {
+        stroke: #fff;
+        fill-opacity: .125;
+        shape-rendering: crispEdges;
+    }
+
+    .overlay {
+        fill: none;
+        pointer-events: all;
+    }
+
+    .axis path,
+    .axis line {
+        fill: none;
+        stroke: #000;
+        shape-rendering: crispEdges;
+    }
+
+    .x.axis path {
+        display: none;
+    }
+
+    .line {
+        clip-path: url(#clip);
+        fill: none;
+        stroke-width: 1.5px;
+    }
+
+    .lineT {
+        clip-path: url(#clip);
+        fill: none;
+        stroke-width: 1.5px;
+    }
+</style>
+<div class="container">
+    <section class="main">
+        <div>
+            <h1><%= title %></h1>
+            <div class="rTable">
+                <div class="rTableRow">
+                    <div class="rTableCell"><select id="select_ID1"></select></div>
+                    <div class="rTableCell"><select id="select_SensorID1"></select></div>
+                    <div class="rTableCell">
+                        <button onclick="getData2Call($('#select_ID1').val(), $('#select_ID2').val(), $('#select_SensorID1').val(), $('#select_SensorID2').val(), 2, draw, '#chart-container1');">
+                            OK
+                        </button>
+                    </div>
+                </div>
+                <div class="rTableRow">
+                    <div class="rTableCell"><select id="select_ID2"></select></div>
+                    <div class="rTableCell"><select id="select_SensorID2"></select></div>
+                    <div class="rTableCell">
+                        <input id="synchronize" type="checkbox" checked> synchronize
+                        </div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <br>
+        <svg id="chart-container1"></svg>
+    </section>
+</div>
+
+<script>
+    var axisXYZ = {
+        x: true,
+        y: true,
+        z: true
+    };
+
+    var brush;
+    var brushT;
+
+    var synchronize = false;
+
+    function draw(result1, result2, elementID) {
+        var data1 = [];
+
+        result1.forEach(function (d) {
+            var xyz = d["DataCollectionValue"].split(',');
+            var elem = {time: parseFloat(d["DataCollectionTime"])};
+
+            if (axisXYZ['x']) {
+                elem["x"] = parseFloat(xyz[0]);
+            }
+            if (axisXYZ['y']) {
+                elem["y"] = parseFloat(xyz[1]);
+            }
+            if (axisXYZ['z']) {
+                elem["z"] = parseFloat(xyz[2]);
+            }
+            data1.push(elem);
+        });
+
+        var data2 = [];
+        result2.forEach(function (d) {
+            var xyz = d["DataCollectionValue"].split(',');
+            var elem = {time: parseFloat(d["DataCollectionTime"])};
+
+            if (axisXYZ['x']) {
+                elem["x"] = parseFloat(xyz[0]);
+            }
+            if (axisXYZ['y']) {
+                elem["y"] = parseFloat(xyz[1]);
+            }
+            if (axisXYZ['z']) {
+                elem["z"] = parseFloat(xyz[2]);
+            }
+            data2.push(elem);
+        });
+
+        var XYZaxisIndex = 0;
+        var colorAxis = {x: "#1f77b4", y: "#ff7f0e", z: "#2ca02c"};
+        var colorTAxis = {x: "#d62728", y: "#999886", z: "#7223FF"};
+
+        var margin = {top: 10, right: 10, bottom: 100, left: 40};
+        var margin2 = {top: 430, right: 10, bottom: 20, left: 40};
+        var width = 1000 - margin.left - margin.right;
+        var height = 500 - margin.top - margin.bottom;
+        var height2 = 500 - margin2.top - margin2.bottom;
+
+        var bisectDate = d3.bisector(function (d) {
+            return d.time;
+        }).left;
+
+        var marginT = {top: 10, right: 10, bottom: 100, left: 40};
+        var margin2T = {top: 500, right: 10, bottom: 20, left: 40};
+        var height2T = 570 - margin2T.top - margin2T.bottom;
+
+        var x = d3.scale.linear().range([0, width]);
+        var x2 = d3.scale.linear().range([0, width]);
+        var y = d3.scale.linear().range([height, 0]);
+        var y2 = d3.scale.linear().range([height2, 0]);
+        var xAxis = d3.svg.axis().scale(x).orient("bottom");
+        var xAxis2 = d3.svg.axis().scale(x2).orient("bottom");
+        var yAxis = d3.svg.axis().scale(y).orient("left");
+
+        var xT = d3.scale.linear().range([0, width]);
+        var x2T = d3.scale.linear().range([0, width]);
+        var yT = d3.scale.linear().range([height, 0]);
+        var y2T = d3.scale.linear().range([height2, 0]);
+        var xAxisT = d3.svg.axis().scale(xT).orient("bottom");
+        var xAxis2T = d3.svg.axis().scale(x2T).orient("bottom");
+
+        brush = d3.svg.brush().x(x2).on("brush", brushed);
+        brushT = d3.svg.brush().x(x2T).on("brush", brushedT);
+
+        var listKeys = d3.keys(data1[0]).filter(function (key) {
+            return key !== "time";
+        });
+        var axis = listKeys.map(function (name) {
+            return {
+                name: name,
+                values: data1.map(function (d) {
+                    return {time: d.time, value: d[name]};
+                }),
+                visible: axisXYZ[name]
+            };
+        });
+
+        var axisT = listKeys.map(function (name) {
+            return {
+                name: name,
+                values: data2.map(function (d) {
+                    return {time: d.time, value: d[name]};
+                }),
+                visible: axisXYZ[name]
+            };
+        });
+
+        /**** DOMAINS ****/
+        var minXAxis, minXAxisT, maxXAxis, maxXAxisT;
+        minXAxis = d3.min(axis, function (c) {
+            return d3.min(c.values, function (v) {
+                return v.time;
+            });
+        });
+        minXAxisT = d3.min(axisT, function (c) {
+            return d3.min(c.values, function (v) {
+                return v.time;
+            });
+        });
+        maxXAxis = d3.max(axis, function (c) {
+            return d3.max(c.values, function (v) {
+                return v.time;
+            });
+        });
+        maxXAxisT = d3.max(axisT, function (c) {
+            return d3.max(c.values, function (v) {
+                return v.time;
+            });
+        });
+
+        x.domain([d3.min([minXAxis, minXAxisT]), d3.max([maxXAxis, maxXAxisT])]);
+
+        var minYAxis, minYAxisT, maxYAxis, maxYAxisT;
+        minYAxis = d3.min(axis, function (c) {
+            return d3.min(c.values, function (v) {
+                return v.value;
+            });
+        });
+        minYAxisT = d3.min(axisT, function (c) {
+            return d3.min(c.values, function (v) {
+                return v.value;
+            });
+        });
+        maxYAxis = d3.max(axis, function (c) {
+            return d3.max(c.values, function (v) {
+                return v.value;
+            });
+        });
+        maxYAxisT = d3.max(axisT, function (c) {
+            return d3.max(c.values, function (v) {
+                return v.value;
+            });
+        });
+
+        y.domain([d3.min([minYAxis, minYAxisT]), d3.max([maxYAxis, maxYAxisT])]);
+
+        x2.domain(x.domain());
+        y2.domain(y.domain());
+
+        xT.domain(x.domain());
+        yT.domain(y.domain());
+        x2T.domain(xT.domain());
+        y2T.domain(yT.domain());
+        /**** DOMAINS ****/
+
+        /**** Lines ****/
+        var line = d3.svg.line()
+                .x(function (d) {
+                    return x(d.time);
+                })
+                .y(function (d) {
+                    return y(d.value);
+                })
+                .interpolate("basis");
+
+        var line2 = d3.svg.line()
+                .x(function (d) {
+                    return x2(d.time);
+                })
+                .y(function (d) {
+                    return y2(d.value);
+                })
+                .interpolate("basis");
+
+        var lineT = d3.svg.line()
+                .x(function (d) {
+                    return xT(d.time);
+                })
+                .y(function (d) {
+                    return yT(d.value);
+                })
+                .interpolate("basis");
+
+        var line2T = d3.svg.line()
+                .x(function (d) {
+                    return x2T(d.time);
+                })
+                .y(function (d) {
+                    return y2T(d.value);
+                })
+                .interpolate("basis");
+        /**** Lines ****/
+
+        d3.select(elementID).selectAll("*").remove();
+
+        /* SVG */
+        var svg = d3.select(elementID)
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom + 100);
+
+        svg.append("defs").append("clipPath")
+                .attr("id", "clip")
+                .append("rect")
+                .attr("width", width)
+                .attr("height", height);
+
+        /**** Viewer ****/
+        /* Viewer canto superior direito */
+        var view = svg.append("g")
+                .attr("class", "view")
+                .attr("transform", "translate(" + (width - 50) + ",0)")
+                .style("display", "none");
+        view.append("text")
+                .attr("class", "pointX")
+                .attr("x", 40)
+                .attr("y", 10);
+        view.append("text")
+                .attr("class", "pointY")
+                .attr("x", 40)
+                .attr("y", 20);
+        view.append("text")
+                .attr("class", "pointZ")
+                .attr("x", 40)
+                .attr("y", 30);
+        view.append("text")
+                .attr("class", "time")
+                .attr("x", 40)
+                .attr("y", 40);
+        /**** Viewer ****/
+
+        /**** Legend ****/
+        var legend = svg.append("g")
+                .attr("class", "legend")
+                .attr("transform", "translate(" + (width / 2 - 50) + ",-20)")
+                .selectAll("text")
+                .data(axis)
+                .enter()
+                .append("g")
+                .attr("class", "legendOp");
+
+        legend.append("rect")
+                .attr("width", 12)
+                .attr("height", 12)
+                .attr("x", function (d) {
+                    return 30 + 25 * d3.keys(axisXYZ).indexOf(d.name);
+                })
+                .attr("y", 22)
+                .attr("fill", function (d) {
+                    return d.visible ? colorAxis[d.name] : "#F1F1F2";
+                })
+                .attr("stroke", "#000000")
+                .attr("stroke-opacity",  function (d) {
+                    return d.visible ? "0" : "0.5";
+                })
+                .attr("class", "legend-box")
+                .on("click", function (d) {
+                    d.visible = !d.visible;
+                    legend.select("rect")
+                            .transition()
+                            .attr("stroke-opacity",  function (d) {
+                                return d.visible ? "0" : "0.5";
+                            })
+                            .attr("fill", function (d) {
+                                return d.visible ? colorAxis[d.name] : "#F1F1F2";
+                            });
+                    XYZaxisIndex = d3.keys(axisXYZ).indexOf(d.name);
+                    axisT[XYZaxisIndex].visible = !axisT[XYZaxisIndex].visible;
+
+                    createLine(focus, axis, "line", line, colorAxis);
+                    createLine(focusT, axisT, "lineT", lineT, colorTAxis);
+                    createLine(context, axis, "line", line2, colorAxis);
+                    createLine(contextT, axisT, "lineT", line2T, colorTAxis);
+                });
+
+        legend.append("text")
+                .attr("x", function (d) {
+                    return 45 + 25 * d3.keys(axisXYZ).indexOf(d.name);
+                })
+                .attr("y", 31)
+                .attr("font-size", 14)
+                .text(function (d) {
+                    return d.name;
+                });
+        /**** Legend ****/
+
+        /**** Focus Data1 ****/
+        var focus = svg.append("g")
+                .attr("class", "focus")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        createLine(focus, axis, "line", line, colorAxis);
+
+        focus.append("g")
+                .attr("class", "x axis")
+                .attr("transform", "translate(0," + height + ")")
+                .call(xAxis)
+                .append("text")
+                .attr("x", width - 50)
+                .attr("y", -10)
+                .attr("dy", ".71em")
+                .style("text-anchor", "end")
+                .text("Milisseconds(ms)");
+
+        focus.append("g")
+                .attr("class", "y axis")
+                .call(yAxis);
+
+        /*VER*
+        focus.selectAll("g .line")
+                .datum(function (d) {
+                    return {name: d.name, values: d.values[d.values.length - 1]};
+                })
+                .append("text")
+                .attr("x", 3)
+                .attr("transform", function (d) {
+                    return "translate(" + (x(d.values.time - 10)) + "," + y(d.values.value) + ")";
+                    //return "translate(100 , 100)";
+                })
+                .attr("dy", ".35em")
+                .text(function (d) {
+                    return d.name;
+                });
+        /*VER*/
+
+        focus.append("rect")
+                .attr("class", "overlay")
+                .style("z-index", "100")
+                .attr("width", width)
+                .attr("height", height)
+                .on("mouseover", function () {
+                    view.style("display", null);
+                })
+                .on("mouseout", function () {
+                    view.style("display", "none");
+                })
+                .on("mousemove", mousemoveFocus);
+        /**** Focus Data1 ****/
+
+        /**** Context Data1 ****/
+        var context = svg.append("g")
+                .attr("class", "context")
+                .attr("transform", "translate(" + margin2.left + "," + margin2.top + ")");
+
+        createLine(context, axis, "line", line2, colorAxis);
+
+        context.append("g")
+                .attr("class", "x axis")
+                .attr("transform", "translate(0," + height2 + ")")
+                .call(xAxis2);
+
+        context.append("g")
+                .attr("class", "x brush")
+                .style("z-index", "100")
+                .call(brush)
+                .selectAll("rect")
+                .attr("height", height2 + 7);
+        /**** Context Data1 ****/
+
+        /**** Focus Data2 ****/
+        var focusT = svg.append("g")
+                .attr("class", "focusT")
+                .attr("transform", "translate(" + marginT.left + "," + marginT.top + ")");
+
+        createLine(focusT, axisT, "lineT", lineT, colorTAxis);
+
+        /*focusT.append("g")
+         .attr("class", "x axis")
+         .attr("transform", "translate(0," + height + ")")
+         .call(xAxisT)
+         .append("text")
+         .attr("x", width - 50)
+         .attr("y", -10)
+         .attr("dy", ".71em")
+         .style("text-anchor", "end")
+         .text("Milisseconds(ms)");*/
+        /*focusT.append("g")
+         .attr("class", "y axis")
+         .call(yAxisT);*/
+
+        /*focusT.append("rect")
+         .attr("class", "overlay")
+         .style("z-index", "100")
+         .attr("width", width)
+         .attr("height", height)
+         .on("mouseover", function () {
+         view.style("display", null);
+         })
+         .on("mouseout", function () {
+         view.style("display", "none");
+         })
+         .on("mousemove", mousemove);*/
+        /**** Focus Data2 ****/
+
+        /**** Context Data2 ****/
+        var contextT = svg.append("g")
+                .attr("class", "contextT")
+                .attr("transform", "translate(" + margin2T.left + "," + margin2T.top + ")");
+
+        createLine(contextT, axisT, "lineT", line2T, colorTAxis);
+
+        contextT.append("g")
+                .attr("class", "x axis")
+                .attr("transform", "translate(0," + height2T + ")")
+                .call(xAxis2T);
+
+        contextT.append("g")
+                .attr("class", "x brush")
+                .style("z-index", "100")
+                .call(brushT)
+                .selectAll("rect")
+                .attr("height", height2T + 7);
+        /**** Context Data2 ****/
+
+        function mousemoveFocus() {
+            var i = bisectDate(data1, x.invert(d3.mouse(this)[0]), 1);
+            if (axisXYZ['x']) {
+                view.select(".pointX").text("x: " + data1[i - 1].x);
+            }
+            if (axisXYZ['y']) {
+                view.select(".pointY").text("y: " + data1[i - 1].y);
+            }
+            if (axisXYZ['z']) {
+                view.select(".pointZ").text("z: " + data1[i - 1].z);
+            }
+            view.select(".time").text("time: " + data1[i - 1].time);
+        }
+
+        /**** Brush ****/
+        function brushed() {
+            x.domain(brush.empty() ? x2.domain() : brush.extent());
+            brushedMethod(focus, axis, line, colorAxis, xAxis);
+            if($("#synchronize").is(':checked')){
+                brushT.extent(brushT.empty() ? x.domain() : brush.extent());
+                brushT(d3.select(".contextT .brush").transition().duration(0));
+                xT.domain(brush.empty() ? x2.domain() : brush.extent());
+                brushedMethod(focusT, axisT, lineT, colorTAxis, xAxisT);
+            }
+        }
+
+        function brushedT() {
+            xT.domain(brushT.empty() ? x2T.domain() : brushT.extent());
+            brushedMethod(focusT, axisT, lineT, colorTAxis, xAxisT);
+            if($("#synchronize").is(':checked')){
+                brush.extent(brush.empty() ? xT.domain() : brushT.extent());
+                brush(d3.select(".context .brush").transition().duration(0));
+                x.domain(brushT.empty() ? x2T.domain() : brushT.extent());
+                brushedMethod(focus, axis, line, colorAxis, xAxis);
+            }
+        }
+
+        function brushedMethod(location, axisData, lineData, colorAxisData, xAxisData){
+            location.selectAll("path").remove();
+            location.selectAll(".line")
+                    .data(axisData)
+                    .enter()
+                    .append("path")
+                    .attr("class", "line axis")
+                    .attr("d", function (d) {
+                        return d.visible ? lineData(d.values) : null;
+                    })
+                    .style("stroke", function (d) {
+                        return colorAxisData[d.name];
+                    });
+            location.select(".x.axis").call(xAxisData);
+        }
+        /**** Brush ****/
+
+        /**** CreateLine ****/
+        function createLine(location, axisData, lineCSS, lineData, colorAxisData) {
+            location.selectAll("path").remove();
+            location.selectAll("." + lineCSS)
+                    .data(axisData)
+                    .enter()
+                    .append("path")
+                    .attr("class", lineCSS + " axis")
+                    .attr("d", function (d) {
+                        return d.visible ? lineData(d.values) : null;
+                    })
+                    .style("stroke", function (d) {
+                        return colorAxisData[d.name];
+                    });
+        }
+        /**** CreateLine ****/
+    }
+</script>
+<!--SCRIPTS-->
+<script>
+    //getData(50, 0, 2, draw, '#chart-container1');
+    getData2Call(50, 50, 0, 0, 2, draw, '#chart-container1');
+</script>
+<script>
+    //INIT MAP
+    selectTrackSession("#select_ID1");
+    selectTrackSession("#select_ID2");
+
+    $("#select_ID1").change(function () {
+        $("#select_SensorID1").find('option').remove();
+        getListSensor("#select_SensorID1", $(this).val());
+    });
+    $("#select_ID2").change(function () {
+        $("#select_SensorID2").find('option').remove();
+        getListSensor("#select_SensorID2", $(this).val());
+    });
+</script>

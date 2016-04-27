@@ -1,0 +1,196 @@
+<script src="/js/geral.js"></script>
+<script type="text/javascript" src="/js/d3.min.js"></script>
+<script type="text/javascript" src="/js/lodash.min.js"></script>
+<script type="text/javascript" src="/js/windChart.js"></script>
+<style>
+    .rTableRow {
+        clear: both;
+    }
+
+    .rTableCell {
+        float: left;
+        padding: 3px 1.8%;
+    }
+    svg {
+        font: 10px sans-serif;
+    }
+
+    .linesT1 {
+        clip-path: url(#clip);
+        fill: none;
+        stroke: red;
+        stroke-width: 1.5px;
+    }
+
+    .linesT2 {
+        clip-path: url(#clip);
+        fill: none;
+        stroke: blue;
+        stroke-width: 1.5px;
+    }
+
+    .axis path,
+    .axis line {
+        fill: none;
+        stroke: #000;
+        shape-rendering: crispEdges;
+    }
+
+    .brush .extent {
+        stroke: #fff;
+        fill-opacity: .125;
+        shape-rendering: crispEdges;
+    }
+
+    .overlay {
+        fill: none;
+        pointer-events: all;
+    }
+
+    .focus circle {
+        fill: none;
+        stroke: steelblue;
+    }
+
+    .axis path,
+    .axis line {
+        fill: none;
+        stroke: #000;
+        shape-rendering: crispEdges;
+    }
+    .x.axis path {
+        display: none;
+    }
+
+    .focusbar{
+        clip-path: url(#clip);
+    }
+
+    .line {
+        fill: none;
+        stroke: steelblue;
+        stroke-width: 1.5px;
+    }
+
+</style>
+<div class="container">
+    <section class="main">
+        <div>
+            <h1><%= title %></h1>
+
+            <div class="rTable">
+                <div class="rTableRow">
+                    <div class="rTableCell">TrackSession: <select id="select_ID1"></select></div>
+                    <div class="rTableCell">SensorN: <select id="select_SensorID1"></select></div>
+                    <div class="rTableCell">
+                        <button onclick="getData($('#select_ID1').val(), $('#select_SensorID1').val(), 2, draw);">
+                            OK
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <br>
+        <div class="row">
+            <svg id="chart_xy"></svg>
+            <svg id="chart_xz"></svg>
+            <svg id="chart_yz"></svg>
+        </div>
+    </section>
+</div>
+<script>
+            function getMaxRange(datas) {
+                var ls = datas.map(function (d) {
+                            return d.length;
+                        }),
+                        maxRange = d3.min(ls);
+                return [0, maxRange];
+            }
+
+            function getChart(_data, xCol, yCol, range) {
+                range = typeof range !== 'undefined' ? range : getMaxRange(_data);
+                var set = xCol + yCol;
+                var data = _data.map(function (d) {
+                            return d.slice(range[0], range[1]).map(function (d) {
+                                return {
+                                    'x1': +d[set]["x1"],
+                                    'y1': +d[set]["y1"],
+                                    'x2': +d[set]["x2"],
+                                    'y2': +d[set]["y2"]
+                                };
+                            });
+                        }),
+
+                        chart = new charts.Graph2D();
+                chart.data(data)
+                        .xDomain(charts.getExtent(_.flatten(data), 'x2'))
+                        .yDomain(charts.getExtent(_.flatten(data), 'y2'))
+                        .xLabel('acc. ' + xCol)
+                        .yLabel('acc. ' + yCol)
+                        .width(350)
+                        .height(350);
+                return chart;
+            }
+
+            function tripleGraph(data, axes) {
+                axes = typeof axes !== 'undefined' ? axes : [['x', 'y'], ['x', 'z'], ['y', 'z']];
+
+                var charts = [];
+                axes.forEach(function (axis) {
+                    var id = axis[0] + axis[1];
+                    charts.push({id: id, chart: getChart(data, axis[0], axis[1])});
+                    d3.select('#chart_' + id).selectAll("*").remove();
+                });
+                var time = 0;
+                charts.forEach(function (d) {
+                    d3.select("#chart_" + d.id).data(d.chart.data()).call(d.chart);
+                });
+            }
+            function draw(result) {
+                var data = [];
+                var i = 0;
+                var lastXX = 0;
+                var lastYY = 0;
+                var lastZZ = 0;
+                var flag = 0;
+                var threshold = 0;
+
+                result.forEach(function (d) {
+                    var xyz = d["DataCollectionValue"].split(',');
+                    if (flag == 0) {
+                        flag = 1;
+                        lastXX = parseFloat(xyz[0]);
+                        lastYY = parseFloat(xyz[1]);
+                        lastZZ = parseFloat(xyz[2]);
+                        return;
+                    }
+
+                    if (Math.sqrt(Math.pow(xyz[0], 2) + Math.pow(xyz[1], 2) + Math.pow(xyz[2], 2)) > threshold) {
+                        data.push({
+                            'xy': {x1: i, y1: 0, x2: i + parseFloat(xyz[0]) - lastXX, y2: parseFloat(xyz[1]) - lastYY},
+                            'xz': {x1: i, y1: 0, x2: i + parseFloat(xyz[0]) - lastXX, y2: parseFloat(xyz[2]) - lastZZ},
+                            'yz': {x1: i, y1: 0, x2: i + parseFloat(xyz[1]) - lastYY, y2: parseFloat(xyz[2]) - lastZZ}
+                        });
+                        i++;
+                        lastXX = parseFloat(xyz[0]);
+                        lastYY = parseFloat(xyz[1]);
+                        lastZZ = parseFloat(xyz[2]);
+                    }
+                });
+                tripleGraph([data]);
+            }
+        </script>
+
+<script>
+    getData(40, 0, 2, draw);
+</script>
+<script>
+    //INIT MAP
+    selectTrackSession("#select_ID1");
+
+    $("#select_ID1").change(function () {
+        $("#select_SensorID1").find('option').remove();
+        getListSensor("#select_SensorID1", $(this).val());
+    });
+</script>

@@ -1,0 +1,124 @@
+{
+  "Welcome": "Welcome",
+  "A brand new app.": "A brand new app.",
+
+  "Name":"Name",
+  "Birthday":"Birthday",
+  "Email":"Email",
+
+  "editing a Athlete":"editing a Athlete",
+  "Athlete Listing":"Athlete Listing",
+  "Create a Athlete": "Create a Athlete",
+  "a Athlete":"a Athlete",
+
+
+  "Manufactured Date":"Manufactured Date",
+  "Software Version":"Software Version",
+
+  "editing a BoardDetail":"editing a BoardDetail",
+  "BoardDetail Listing":"BoardDetail Listing",
+  "Create a BoardDetail":"Create a BoardDetail",
+  "a BoardDetail":"a BoardDetail",
+
+
+  "Track Athlete Id":"Track Athlete Id",
+  "Board Serial Number":"Board Serial Number",
+  "Board Location":"Board Location",
+  "Board Detail Id":"Board Detail Id",
+
+  "editing a BoardTrackSession":"editing a BoardTrackSession",
+  "BoardTrackSession Listing":"BoardTrackSession Listing",
+  "Create a BoardTrackSession":"Create a BoardTrackSession",
+  "a BoardTrackSession":"a BoardTrackSession",
+
+
+  "Session Configuration Id":"Session Configuration Id",
+  "Processed Results":"Processed Results",
+  "Collected Values":"Collected Values",
+
+  "editing a FinishedSessionDataCollection":"editing a FinishedSessionDataCollection",
+  "FinishedSessionDataCollection Listing":"FinishedSessionDataCollection Listing",
+  "Create a FinishedSessionDataCollection":"Create a FinishedSessionDataCollection",
+  "a FinishedSessionDataCollection":"a FinishedSessionDataCollection",
+
+
+  "Name":"Name",
+  "Description":"Description",
+
+  "editing a InformationType":"editing a InformationType",
+  "InformationType Listing":"InformationType Listing",
+  "Create a InformationType":"Create a InformationType",
+  "a InformationType":"a InformationType",
+
+
+  "Track Session Configuration Id":"Track Session Configuration Id",
+  "Data Collection Time":"Data Collection Time",
+  "Data Collection Value":"Data Collection Value",
+
+  "editing a OnGoingDataCollection":"editing a OnGoingDataCollection",
+  "OnGoingDataCollection Listing":"OnGoingDataCollection Listing",
+  "Create a OnGoingDataCollection":"Create a OnGoingDataCollection",
+  "a OnGoingDataCollection":"a OnGoingDataCollection",
+
+
+  "Name":"Name",
+  "Description":"Description",
+
+  "editing a SessionType":"editing a SessionType",
+  "SessionType Listing":"SessionType Listing",
+  "Create a SessionType":"Create a SessionType",
+  "a SessionType":"a SessionType",
+
+
+  "Name":"Name",
+  "Description":"Description",
+
+  "editing a SportType":"editing a SportType",
+  "SportType Listing":"SportType Listing",
+  "Create a SportType":"Create a SportType",
+  "a SportType":"a SportType",
+
+
+  "Session Id":"Session Id",
+  "Start Time":"Start Time",
+  "End Time":"End Time",
+  "Session Type Id":"Session Type Id",
+  "Sport Type Id":"Sport Type Id",
+  "Athlete Id":"Athlete Id",
+
+  "editing a TrackAthlete":"editing a TrackAthlete",
+  "TrackAthlete Listing":"TrackAthlete Listing",
+  "Create a TrackAthlete":"Create a TrackAthlete",
+  "a TrackAthlete":"a TrackAthlete",
+
+
+  "Board Track Session Id":"Board Track Session Id",
+  "Board Location":"Board Location",
+
+  "editing a TrackSessionConfiguration":"editing a TrackSessionConfiguration",
+  "TrackSessionConfiguration Listing":"TrackSessionConfiguration Listing",
+  "Create a TrackSessionConfiguration":"Create a TrackSessionConfiguration",
+  "a TrackSessionConfiguration":"a TrackSessionConfiguration",
+
+
+  "Name":"Name",
+  "Birthday":"Birthday",
+  "Email":"Email",
+
+  "editing a Trainer":"editing a Trainer",
+  "Trainer Listing":"Trainer Listing",
+  "Create a Trainer": "Create a Trainer",
+  "a Trainer":"a Trainer",
+
+
+  "Show":"Show",
+  "Edit":"Edit",
+  "New":"New",
+  "Update":"Update",
+  "Cancel":"Cancel",
+  "Delete":"Delete",
+  "Submit":"Submit",
+  "Back to list":"Back to list",
+  "all scaffolds":"all scaffolds",
+  "":""
+}

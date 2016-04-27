@@ -1,0 +1,20 @@
+<form action="/OnGoingDataCollection/create" method="POST" role="form" class="new">
+	<div class="form-group">
+	<h2><%= __('Create a OnGoingDataCollection') %></h2>
+
+	<div class="control-group" style = "width: 300px;">
+	<input type="text" class="form-control" placeholder="<%= __('Track Session Configuration Id') %>" name="TrackSessionConfigurationId">
+	</div>
+
+	<div class="control-group" style = "width: 300px;">
+	<input type="text" class="form-control" placeholder="<%= __('Data Collection Time') %>" name="DataCollectionTime">
+	</div>
+
+	<div class="control-group" style = "width: 300px;">
+	<input type="text" class="form-control" placeholder="<%= __('Data Collection Value') %>" name="DataCollectionValue">
+	</div>
+
+	</div>
+	<input type="submit" value="<%= __('Submit') %>" class="btn btn-default"/> |
+	<a href="/OnGoingDataCollection"><%= __('Back to list') %></a>
+</form>

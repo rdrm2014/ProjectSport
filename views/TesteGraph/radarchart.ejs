@@ -1,0 +1,64 @@
+<script src="/js/d3.min.js"></script>
+<script src="/js/RadarChart/RadarChart.js"></script>
+<style>
+    .rTableRow {
+        clear: both;
+    }
+
+    .rTableCell {
+        float: left;
+        padding: 3px 1.8%;
+    }
+    body {
+        overflow: hidden;
+        margin: 0;
+        font-size: 14px;
+        font-family: "Helvetica Neue", Helvetica;
+    }
+
+    /*#chart {
+        position: absolute;
+        top: 50px;
+        left: 100px;
+    }*/
+</style>
+<div class="container">
+    <section class="main">
+        <div>
+            <h1><%= title %></h1>
+<!--
+            <div class="rTable">
+                <div class="rTableRow">
+                    <div class="rTableCell"><select id="select_ID1"></select></div>
+                    <div class="rTableCell"><select id="select_SensorID1"></select></div>
+                    <div class="rTableCell">
+                        <button onclick="getData($('#select_ID1').val(), $('#select_SensorID1').val(), 1, draw, '#chart-container');">
+                            OK
+                        </button>
+                    </div>
+                </div>
+            </div>-->
+        </div>
+        <br>
+        <br>
+        <svg id="chart-container"></svg>
+    </section>
+</div>
+
+<script type="text/javascript" src="/js/RadarChart/scriptRadarChart.js"></script>
+<!--
+<script>
+    getData(40, 0, 1, draw, '#chart-container');
+</script>
+<script>
+    //INIT MAP
+    selectTrackSession("#select_ID1");
+
+    $("#select_ID1").change(function () {
+        $("#select_SensorID1").find('option').remove();
+        getListSensor("#select_SensorID1", $(this).val());
+    });
+</script>-->
+
+
+

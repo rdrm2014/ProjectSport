@@ -1,0 +1,16 @@
+<form action="/BoardDetail/create" method="POST" role="form" class="new">
+	<div class="form-group">
+	<h2><%= __('Create a BoardDetail') %></h2>
+
+	<div class="control-group" style = "width: 300px;">
+	<input type="text" class="form-control" placeholder="<%= __('Manufactured Date') %>" name="ManufacturedDate">
+	</div>
+
+	<div class="control-group" style = "width: 300px;">
+	<input type="text" class="form-control" placeholder="<%= __('Software Version') %>" name="SoftwareVersion">
+	</div>
+
+	</div>
+	<input type="submit" value="<%= __('Submit') %>" class="btn btn-default"/> |
+	<a href="/BoardDetail"><%= __('Back to list') %></a>
+</form>

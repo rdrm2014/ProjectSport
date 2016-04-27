@@ -1,0 +1,24 @@
+<form class="show">
+	<div class="form-group">
+		<h2><%= __('a FinishedSessionDataCollection') %></h2>
+		
+	<div class="form-group" style="width: 400px;">
+	<label><%= __('Session Configuration Id') %></label>
+	<input value="<%= FinishedSessionDataCollection.SessionConfigurationId %>" name="SessionConfigurationId" type="text" class="form-control" disabled/>
+	</div>
+
+	<div class="form-group" style="width: 400px;">
+	<label><%= __('Processed Results') %></label>
+	<input value="<%= FinishedSessionDataCollection.ProcessedResults %>" name="ProcessedResults" type="text" class="form-control" disabled/>
+	</div>
+
+	<div class="form-group" style="width: 400px;">
+	<label><%= __('Collected Values') %></label>
+	<input value="<%= FinishedSessionDataCollection.CollectedValues %>" name="CollectedValues" type="text" class="form-control" disabled/>
+	</div>
+
+</div>
+</div>
+<a href="/FinishedSessionDataCollection/edit/<%=FinishedSessionDataCollection.id %>" class="btn btn-default"><%= __('Edit') %></a> |
+<a href="/FinishedSessionDataCollection"><%= __('Back to list') %></a>
+</form>

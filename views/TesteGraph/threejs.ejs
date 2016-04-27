@@ -1,0 +1,202 @@
+<script src="/js/geral.js"></script>
+<script src="/js/threejs/three.min.js"></script>
+<script src="/js/threejs/TrackballControls.js"></script>
+<script src="/js/threejs/Detector.js"></script>
+<script src="/js/threejs/stats.min.js"></script>
+<style>
+    .rTableRow {
+        clear: both;
+    }
+
+    .rTableCell {
+        float: left;
+        padding: 3px 1.8%;
+    }
+</style>
+<div class="container">
+    <section class="main">
+        <div>
+            <h1><%= title %></h1>
+
+            <div class="rTable">
+                <div class="rTableRow">
+                    <div class="rTableCell"><select id="select_ID1"></select></div>
+                    <div class="rTableCell"><select id="select_SensorID1"></select></div>
+                    <div class="rTableCell">
+                        <button onclick="getData($('#select_ID1').val(), $('#select_SensorID1').val(), 2, chargeDataAcc);getData($('#select_ID1').val(), $('#select_SensorID1').val(), 3, chargeDataGyro);">
+                            OK
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <br>
+        <div id="chart-container"></div>
+    </section>
+</div>
+
+<script>
+    if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
+
+    var dataAcc = [];
+    var dataGyro = [];
+
+    var container, stats;
+
+    var camera, controls, scene, renderer;
+    var object, light;
+
+    var i=0;
+
+    function chargeDataAcc(result) {
+        result.forEach(function (d) {
+            var xyz = d["DataCollectionValue"].split(',');
+            dataAcc.push({
+                time: d["DataCollectionTime"],
+                x: xyz[0],
+                y: xyz[1],
+                z: xyz[2]
+            });
+        });
+    }
+
+    function chargeDataGyro(result) {
+        result.forEach(function (d) {
+            var xyz = d["DataCollectionValue"].split(',');
+
+            dataGyro.push({
+                time: d["DataCollectionTime"],
+                x: xyz[0],
+                y: xyz[1],
+                z: xyz[2]
+            });
+        });
+
+        init();
+        animate();
+    }
+
+    function init() {
+        camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 1000 );
+        camera.position.z = 500;
+
+        /* Controlos */
+        controls = new THREE.TrackballControls( camera );
+        //controls.rotateSpeed = 1.0;
+        //controls.zoomSpeed = 1.2;
+        //controls.panSpeed = 0.8;
+        //controls.noZoom = false;
+        //controls.noPan = false;
+        //controls.staticMoving = true;
+        //controls.dynamicDampingFactor = 0.3;
+        //controls.keys = [ 65, 83, 68 ];
+        controls.addEventListener( 'change', render );
+        /* Controlos */
+
+        /* Cenário */
+        scene = new THREE.Scene();
+        /* Cenário */
+
+        /* Criacao Eixos/Objecto */
+        //object = new THREE.AxisHelper(50);
+        //object.position.set(0, 0, 0);
+        //scene.add(object);
+        scene.add(new THREE.AxisHelper(50));
+        object = new THREE.Mesh(new THREE.BoxGeometry(25, 10, 50, 4, 4, 4), new THREE.MeshLambertMaterial({ambient: 0xbbbbbb, side: THREE.DoubleSide}));
+        object.position.set(0, 0, 0);
+        scene.add(object);
+        /* Criacao Eixos/Objecto */
+
+        /* Luzes */
+        scene.add(new THREE.AmbientLight(0xf0f0f0));
+        light = new THREE.DirectionalLight(0xffffff);
+        light.position.set(1, 1, 1);
+        scene.add(light);
+        /* Luzes */
+
+        renderer = new THREE.WebGLRenderer( { antialias: false } );
+
+        renderer.setPixelRatio( window.devicePixelRatio );
+
+        renderer.setSize( window.innerWidth, window.innerHeight );
+
+        container = document.getElementById('chart-container');
+        container.appendChild( renderer.domElement );
+
+        /* Stats */
+        stats = new Stats();
+        stats.domElement.style.position = 'absolute';
+        stats.domElement.style.top = '0px';
+        stats.domElement.style.zIndex = 100;
+        container.appendChild( stats.domElement );
+        /* Stats */
+
+        window.addEventListener( 'resize', onWindowResize, false );
+
+        //animate();
+        render();
+    }
+
+    function onWindowResize() {
+
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize( window.innerWidth, window.innerHeight );
+
+        controls.handleResize();
+
+        render();
+    }
+
+    function animate() {
+        camera.lookAt(scene.position);
+
+        /*"Sleep"*/
+        var now = new Date().getTime();
+        while (new Date().getTime() <= now + 0.1*1000) {}
+        /*"Sleep"*/
+
+        /* Muda Posicao e Rotacao do Objecto */
+        if (i == 0) {
+            object.position.set(0, 0, 0);
+        }
+
+        object.rotation.x = dataGyro[i].x;
+        object.rotation.y = dataGyro[i].y;
+        object.rotation.z = dataGyro[i].z;
+
+        object.translateX(dataAcc[i].x);
+        object.translateY(dataAcc[i].y);
+        object.translateZ(dataAcc[i].z);
+
+        i = ++i % dataAcc.length;
+        /* Muda Posicao e Rotacao do Objecto */
+
+        renderer.render(scene, camera);
+
+        stats.update();
+
+        requestAnimationFrame( animate );
+        controls.update();
+    }
+
+    function render() {
+        renderer.render( scene, camera );
+        stats.update();
+    }
+</script>
+
+<script>
+    getData(40, 0, 2, chargeDataAcc);
+    getData(40, 0, 3, chargeDataGyro);
+</script>
+<script>
+    //INIT MAP
+    selectTrackSession("#select_ID1");
+
+    $("#select_ID1").change(function () {
+        $("#select_SensorID1").find('option').remove();
+        getListSensor("#select_SensorID1", $(this).val());
+    });
+</script>

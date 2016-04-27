@@ -1,0 +1,42 @@
+<%  layout= 'layout_login' %>
+<div class="container">
+    <div class="jumbotron">
+        <h1><%= __('Sport Project') %></h1>
+
+        <h2>Admin</h2>
+        <a class="btn btn-lg btn-success spar-list" href="/athlete">athlete</a>
+        <a class="btn btn-lg btn-success spar-list" href="/trainer">trainer</a>
+        <a class="btn btn-lg btn-success spar-list" href="/boarddetail">boarddetail</a>
+        <a class="btn btn-lg btn-success spar-list" href="/sessiontype">sessiontype</a>
+        <a class="btn btn-lg btn-success spar-list" href="/sporttype">sporttype</a>
+        <a class="btn btn-lg btn-success spar-list" href="/informationtype">informationtype</a>
+
+        <hr>
+        <h2>Trainer</h2>
+        <a class="btn btn-lg btn-warning spar-list" href="/StartTraining">Novo Treino</a>
+        <a class="btn btn-lg btn-warning spar-list" href="/status">Configuração</a>
+        <br>
+        <a class="btn btn-lg btn-success spar-list" href="/trackathlete">trackathlete</a>
+        <a class="btn btn-lg btn-success spar-list" href="/ongoingdatacollection">ongoingdatacollection</a>
+        <a class="btn btn-lg btn-success spar-list" href="/finishedsessiondatacollection">finishedsessiondatacollection</a>
+
+        <a class="btn btn-lg btn-success spar-list" href="/boardtracksession">boardtracksession</a>
+        <a class="btn btn-lg btn-success spar-list" href="/tracksessionconfiguration">tracksessionconfiguration</a>
+
+        <a class="btn btn-lg btn-success spar-list" href="/testegraph">testegraph</a>
+
+        <hr>
+        <h2>User</h2>
+        <a class="btn btn-lg btn-success spar-list" href="/finishedsessiondatacollection">finishedsessiondatacollection</a>
+        <hr>
+        <h2>Não Usado</h2>
+        <a class="btn btn-lg btn-success spar-list" href="/auth">auth</a>
+        <a class="btn btn-lg btn-success spar-list" href="/default">default</a>
+
+        <hr>
+        <% _.each(_.keys(sails.controllers), function(controller) { %>
+        <a href="/<%= controller %>" class="btn btn-lg btn-success spar-list"><%= controller %></a>
+        <% }) %>
+
+    </div>
+</div>

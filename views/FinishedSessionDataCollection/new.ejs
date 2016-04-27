@@ -1,0 +1,28 @@
+<form action="/FinishedSessionDataCollection/create" method="POST" role="form" class="new">
+	<div class="form-group">
+	<h2><%= __('Create a FinishedSessionDataCollection') %></h2>
+
+<% if(flash && flash.err) { %>
+<ul class="alert alert-success">
+<% Object.keys(flash.err).forEach(function(error) { %>
+<li><%- JSON.stringify(flash.err[error]) %></li>
+<% }) %>
+</ul>
+<% } %>
+	
+	<div class="control-group" style = "width: 300px;">
+	<input type="text" class="form-control" placeholder="<%= __('Session Configuration Id') %>'" name="SessionConfigurationId">
+	</div>
+
+	<div class="control-group" style = "width: 300px;">
+	<input type="text" class="form-control" placeholder="<%= __('Processed Results') %>'" name="ProcessedResults">
+	</div>
+
+	<div class="control-group" style = "width: 300px;">
+	<input type="text" class="form-control" placeholder="<%= __('Collected Values') %>'" name="CollectedValues">
+	</div>
+
+	</div>
+	<input type="submit" value="<%= __('Submit') %>" class="btn btn-default"/> |
+	<a href="/FinishedSessionDataCollection"><%= __('Back to list') %></a>
+</form>

@@ -1,0 +1,14 @@
+<form action="/SessionType/create" method="POST" role="form" class="new">
+    <div class="form-group">
+        <h2><%= __('Create a SessionType') %></h2>
+
+        <div class="control-group" style="width: 300px;">
+            <input type="text" class="form-control" placeholder="<%= __('Name') %>" name="Name">
+        </div>
+        <div class="control-group" style="width: 300px;">
+            <input type="text" class="form-control" placeholder="<%= __('Description') %>" name="Description">
+        </div>
+    </div>
+    <input type="submit" value="<%= __('Submit') %>" class="btn btn-default"/> |
+    <a href="/SessionType"><%= __('Back to list') %></a>
+</form>

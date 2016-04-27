@@ -1,0 +1,19 @@
+<form class="show">
+	<div class="form-group">
+		<h2><%= __('a SessionType') %></h2>
+		
+	<div class="form-group" style="width: 400px;">
+	<label><%= __('Name') %></label>
+	<input value="<%= SessionType.Name %>" name="Name" type="text" class="form-control" disabled/>
+	</div>
+
+	<div class="form-group" style="width: 400px;">
+	<label><%= __('Description') %></label>
+	<input value="<%= SessionType.Description %>" name="Description" type="text" class="form-control" disabled/>
+	</div>
+
+</div>
+</div>
+<a href="/SessionType/edit/<%=SessionType.id %>" class="btn btn-default"><%= __('Edit') %></a> |
+<a href="/SessionType"><%= __('Back to list') %></a>
+</form>

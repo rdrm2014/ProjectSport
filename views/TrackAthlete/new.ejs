@@ -1,0 +1,32 @@
+<form action="/TrackAthlete/create" method="POST" role="form" class="new">
+	<div class="form-group">
+	<h2><%= __('Create a TrackAthlete') %></h2>
+
+	<div class="control-group" style = "width: 300px;">
+	<input type="text" class="form-control" placeholder="<%= __('Session Id') %>" name="SessionId">
+	</div>
+
+	<div class="control-group" style = "width: 300px;">
+	<input type="text" class="form-control" placeholder="<%= __('Start Time') %>" name="StartTime">
+	</div>
+
+	<div class="control-group" style = "width: 300px;">
+	<input type="text" class="form-control" placeholder="<%= __('End Time') %>" name="EndTime">
+	</div>
+
+	<div class="control-group" style = "width: 300px;">
+	<input type="text" class="form-control" placeholder="<%= __('Session Type Id') %>" name="SessionTypeId">
+	</div>
+
+	<div class="control-group" style = "width: 300px;">
+	<input type="text" class="form-control" placeholder="<%= __('Sport Type Id') %>" name="SportTypeId">
+	</div>
+
+	<div class="control-group" style = "width: 300px;">
+	<input type="text" class="form-control" placeholder="<%= __('Athlete Id') %>" name="AthleteId">
+	</div>
+
+	</div>
+	<input type="submit" value="<%= __('Submit') %>" class="btn btn-default"/> |
+	<a href="/TrackAthlete"><%= __('Back to list') %></a>
+</form>

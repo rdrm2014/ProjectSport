@@ -1,0 +1,24 @@
+<form class="show">
+	<div class="form-group">
+		<h2> <%= __('a Athlete') %> </h2>
+		
+	<div class="form-group" style="width: 400px;">
+	<label>name</label>
+	<input value="<%= Athlete.Name %>" name="Name" type="text" class="form-control" disabled/>
+	</div>
+
+	<div class="form-group" style="width: 400px;">
+	<label>name</label>
+	<input value="<%= Athlete.Birthday %>" name="Birthday" type="text" class="form-control" disabled/>
+	</div>
+
+	<div class="form-group" style="width: 400px;">
+	<label>name</label>
+	<input value="<%= Athlete.Email %>" name="Email" type="text" class="form-control" disabled/>
+	</div>
+
+</div>
+</div>
+<a href="/Athlete/edit/<%=Athlete.id %>" class="btn btn-default"><%= __('Edit') %></a> |
+<a href="/Athlete"><%= __('Back to list') %></a>
+</form>

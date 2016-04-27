@@ -1,0 +1,635 @@
+<link href="../styles/bootstrap.min.css" rel="stylesheet" type="text/css">
+<script src="../dists/jsoneditor.js"></script>
+
+<script src="../js/File/filereader.js"></script>
+<script src="../js/File/FileSaver.js"></script>
+
+<div class="container">
+  <h1><%= title %></h1>
+  <hr>
+
+  <p>
+    <select id="comSelected" class="form-control" required="required" name="ComSelect">
+      <% _.forEach(listSerialPorts, function(listSerialPorts) { %>
+      <option value="<%= listSerialPorts.comName %>"><%= listSerialPorts.comName %></option>
+      <% }) %>
+    </select>
+    <br>
+    <button id="submitCOM" type="submit" class="btn btn-success btn-lg pull-right">Submit</button>
+    <br><br>
+  </p>
+  <hr>
+  <p>
+    Load a JSON document: <input type="file" id="loadDocument" value="Load"/>
+  </p>
+
+  <p>
+    Save a JSON document: <input type="button" id="saveDocument" value="Save"/>
+  </p>
+
+  <p>
+    <input type="button" id="saveJSON" value="SaveJSON"/>
+  </p>
+  <hr>
+  <!---->
+
+  <style type="text/css">
+    body {
+      margin-top: 40px;
+    }
+
+    .stepwizard-step p {
+      margin-top: 10px;
+    }
+
+    .stepwizard-row {
+      display: table-row;
+    }
+
+    .stepwizard {
+      display: table;
+      width: 50%;
+      position: relative;
+    }
+
+    .stepwizard-step button[disabled] {
+      opacity: 1 !important;
+      filter: alpha(opacity=100) !important;
+    }
+
+    .stepwizard-row:before {
+      top: 14px;
+      bottom: 0;
+      position: absolute;
+      content: " ";
+      width: 100%;
+      height: 1px;
+      background-color: #ccc;
+      z-order: 0;
+    }
+
+    .stepwizard-step {
+      display: table-cell;
+      text-align: center;
+      position: relative;
+    }
+
+    .btn-circle {
+      width: 30px;
+      height: 30px;
+      text-align: center;
+      padding: 6px 0;
+      font-size: 12px;
+      line-height: 1.428571429;
+      border-radius: 15px;
+    }
+  </style>
+
+
+  <div id="jsoneditorv1">
+    <!--<form action="/StartTraining/create" method="POST" role="form" class="new form-horizontal" autocomplete="off">
+      <div class="form-group">
+        <h2>Start Configuration</h2>
+
+        <div class="container">
+          <div class="stepwizard col-md-offset-3">
+            <div class="stepwizard-row setup-panel">
+              <div class="stepwizard-step">
+                <a class="btn btn-circle btn-default btn-primary" type="button" href="#step-1">1</a>
+
+                <p>Step 1</p>
+              </div>
+              <div class="stepwizard-step">
+                <a class="btn btn-default btn-circle" type="button" href="#step-2" disabled>2</a>
+
+                <p>Step 2</p>
+              </div>
+              <div class="stepwizard-step">
+                <a class="btn btn-default btn-circle" type="button" href="#step-3" disabled>3</a>
+
+                <p>Step 3</p>
+              </div>
+            </div>
+          </div>
+          <div id="step-1" class="row setup-content" style="display: block;">
+            <div class="col-xs-6 col-md-offset-3">
+              <div class="col-md-12">
+                <h3> Step 1</h3>
+
+                <div class="form-group">
+                  <label class="col-sm-2 control-label">SensorsID</label>
+
+                  <div class="col-sm-10">
+                    <select class="form-control" required="required" name="SportType">
+                      <option value="a1">a1</option>
+                      <option value="a2">a2</option>
+                      <option value="a3">a3</option>
+                    </select>
+                  </div>
+                </div>
+                <button type="button" class="btn btn-primary nextBtn btn-lg pull-right">Next</button>
+              </div>
+            </div>
+          </div>
+          <div id="step-2" class="row setup-content" style="display: none;">
+            <div class="col-xs-6 col-md-offset-3">
+              <div class="col-md-12">
+                <h3> Step 2</h3>
+
+                <div class="form-group">
+                  <label class="col-sm-2 control-label">PeersID</label>
+
+                  <div class="col-sm-10">
+                    <select class="form-control" required="required" name="Peers">
+                      <option value="a1">a1</option>
+                      <option value="a2">a2</option>
+                      <option value="a3">a3</option>
+                    </select>
+                  </div>
+                </div>
+                <button type="button" class="btn btn-primary nextBtn btn-lg pull-right">Next</button>
+              </div>
+            </div>
+          </div>
+          <div id="step-3" class="row setup-content" style="display: none;">
+            <div class="col-xs-6 col-md-offset-3">
+              <div class="col-md-12">
+                <h3> Step 3</h3>
+
+                <div class="form-group">
+                  <label class="col-sm-2 control-label">Type</label>
+
+                  <div class="col-sm-10">
+                    <select class="form-control" required="required" name="Type">
+                      <option value="a1">a1</option>
+                      <option value="a2">a2</option>
+                      <option value="a3">a3</option>
+                    </select>
+                  </div>
+
+                  <label class="col-sm-2 control-label">Enabled</label>
+
+                  <div class="col-sm-10">
+                    <input id="tagsBoard" type="checkbox" placeholder="Board" class="col-sm-2 form-control"
+                           required="required"
+                           maxlength="200" name="Board"/>
+                  </div>
+
+                  <label class="col-sm-2 control-label">fa</label>
+
+                  <div class="col-sm-10">
+                    <input id="tagsBoard" type="text" placeholder="Board" class="form-control" required="required"
+                           maxlength="200" value="101010" name="Board">
+                  </div>
+                  <button type="submit" class="btn btn-success btn-lg pull-right">Submit</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <a href="/">Back to list</a>
+        </div>
+      </div>
+    </form><!---->
+    <!---->
+    <!-- https://select2.github.io/examples.html -->
+    <!-- https://eonasdan.github.io/bootstrap-datetimepicker/ -->
+    <!---->
+
+    <!---->
+  </div>
+  <script type="text/javascript">
+    function populateForm() {
+      var IDs = Object.keys(jsonData[0]);
+      console.log(IDs);
+      for (var i = 0; i < IDs.length; i++) {
+        if (IDs[i] == "id") {
+          console.log(IDs[IDs[i]]);
+          $("#sensorsID").append(
+            $('<option />', {value: jsonData[0][IDs[i]], text: jsonData[0][IDs[i]]})
+          )
+        }
+
+      }
+    }
+
+    function creatForm() {
+      var navListItems = $('div.setup-panel div a'),
+        allWells = $('.setup-content'),
+        allNextBtn = $('.nextBtn');
+
+      allWells.hide();
+
+      navListItems.click(function (e) {
+        e.preventDefault();
+        var $target = $($(this).attr('href')),
+          $item = $(this);
+
+        if (!$item.hasClass('disabled')) {
+          navListItems.removeClass('btn-primary').addClass('btn-default');
+          $item.addClass('btn-primary');
+          allWells.hide();
+          $target.show();
+          $target.find('input:eq(0)').focus();
+        }
+      });
+
+      allNextBtn.click(function () {
+        var curStep = $(this).closest(".setup-content"),
+          curStepBtn = curStep.attr("id"),
+          nextStepWizard = $('div.setup-panel div a[href="#' + curStepBtn + '"]').parent().next().children("a"),
+          curInputs = curStep.find("input[type='text'],input[type='url'],textarea[textarea]"),
+          isValid = true;
+
+        $(".form-group").removeClass("has-error");
+        for (var i = 0; i < curInputs.length; i++) {
+          if (!curInputs[i].validity.valid) {
+            isValid = false;
+            $(curInputs[i]).closest(".form-group").addClass("has-error");
+          }
+        }
+
+        if (isValid)
+          nextStepWizard.removeAttr('disabled').trigger('click');
+      });
+
+      $('div.setup-panel div a.btn-primary').trigger('click');
+    }
+  </script>
+  <div id="jsoneditor"></div>
+
+  <!---->
+</div>
+
+<script>
+  $("#submitCOM").click(function () {
+    getAllInformation($('#comSelected').val());
+  });
+
+  $("#saveJSON").click(function () {
+    saveJSON();
+  });
+</script>
+<script>
+  var jsonData;
+  var editor;
+
+  function saveJSON() {
+    var list = diffJSON(jsonData, editor.getValue());
+
+    console.log(jsonData);
+    console.log(editor.getValue());
+    console.log(list);
+
+    $.ajax({
+      url: "/status/update",
+      type: "post",
+      data: {listSensors: JSON.stringify(list)},
+      success: function (data, textStatus, jqXHR) {
+        alert("Guardado!");
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        console.log("ERROR");
+      }
+    });
+  }
+
+  function getAllInformation(comSelected) {
+    console.log(comSelected);
+    $.ajax({
+      url: "/status/getAllInformation",
+      type: "post",
+      data: {portCom: comSelected},
+      success: function (data, textStatus, jqXHR) {
+
+        console.log(data);
+
+        var container = $('#jsoneditor');//document.getElementById('jsoneditor');
+        container.empty();
+        //container.innerHTML = '';
+
+        jsonData = JSON.parse(data);
+
+        createVisualization(container, jsonData);
+
+        // Load a JSON document
+        FileReaderJS.setupInput($('#loadDocument')[0], {
+          readAsDefault: 'Text',
+          on: {
+            load: function (event, file) {
+              editor.setText(event.target.result);
+            }
+          }
+        });
+
+        // Save a JSON document
+        $('#saveDocument').click(function updateSensors() {
+          console.log(editor.getValue());
+          var blob = new Blob([editor.getValue()], {type: 'application/json;charset=utf-8'});
+          saveAs(blob, 'document.json');
+
+          saveJSON();
+        });
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        console.log("ERROR");
+      }
+    });
+  }
+
+  function createVisualization(container, jsonData) {
+
+    container.append(
+      $('<form />', {
+        action: '/StartTraining/create',
+        method: 'POST',
+        role: "form",
+        class: "new form-horizontal",
+        autocomplete: "off"
+      }).append(
+        $('<div />', {class: "form-group"}).append(
+          $('<h2 />', {text: "Start Configuration"}),
+          $('<div />', {class: "container"}).append(
+            $('<div />', {class: "stepwizard col-md-offset-3"}).append(
+              $('<div />', {class: "stepwizard-row setup-panel"}).append(
+                $('<div />', {class: "stepwizard-step"}).append(
+                  $('<a />', {
+                    href: "#step-1",
+                    type: "button",
+                    class: "btn btn-circle btn-default btn-primary",
+                    text: 1
+                  }),
+                  $('<p />', {text: "Step 1"})
+                ),
+                $('<div />', {class: "stepwizard-step"}).append(
+                  $('<a />', {
+                    href: "#step-2",
+                    type: "button",
+                    class: "btn btn-circle btn-default btn-primary",
+                    disable: "",
+                    text: 2
+                  }),
+                  $('<p />', {text: "Step 2"})
+                ),
+                $('<div />', {class: "stepwizard-step"}).append(
+                  $('<a />', {
+                    href: "#step-3",
+                    type: "button",
+                    class: "btn btn-circle btn-default btn-primary",
+                    disable: "",
+                    text: 3
+                  }),
+                  $('<p />', {text: "Step 3"})
+                )
+              )
+            ),
+            $('<div />', {id: "step-1", class: "row setup-content", style: "display: block;"}).append(
+              $('<div />', {class: "col-xs-6 col-md-offset-3"}).append(
+                $('<div />', {class: "col-md-12"}).append(
+                  $('<h3 />', {text: "Step 1"}),
+                  $('<div />', {class: "form-group"}).append(
+                    $('<label />', {class: "col-sm-2 control-label", text: "SensorsID"}),
+                    $('<div />', {class: "col-sm-10"}).append(
+                      $('<select />', {class: "form-control", required: "required", name: "sensorsID", id: "sensorsID"})
+                      /*.append(
+                       $('<option />', {value: "a1", text: "a1"}),
+                       $('<option />', {value: "a2", text: "a2"}),
+                       $('<option />', {value: "a3", text: "a3"})
+                       )
+                       */
+                    )
+                  ),
+                  $('<button />', {type: "button", class: "btn btn-primary nextBtn btn-lg pull-right", text: "Next"})
+                )
+              )
+            ),
+            $('<div />', {id: "step-2", class: "row setup-content", style: "display: none;"}).append(
+              $('<div />', {class: "col-xs-6 col-md-offset-3"}).append(
+                $('<div />', {class: "col-md-12"}).append(
+                  $('<h3 />', {text: "Step 2"}),
+                  $('<div />', {class: "form-group"}).append(
+                    $('<label />', {class: "col-sm-2 control-label", text: "PeersID"}),
+                    $('<div />', {class: "col-sm-10"}).append(
+                      $('<select />', {class: "form-control", required: "required", name: "peersID", id: "peersID"})
+                      /*.append(
+                       $('<option />', {value: "a1", text: "a1"}),
+                       $('<option />', {value: "a2", text: "a2"}),
+                       $('<option />', {value: "a3", text: "a3"})
+                       )
+                       */
+                    )
+                  ),
+                  $('<button />', {type: "button", class: "btn btn-primary nextBtn btn-lg pull-right", text: "Next"})
+                )
+              )
+            ),
+            $('<div />', {id: "step-3", class: "row setup-content", style: "display: none;"}).append(
+              $('<div />', {class: "col-xs-6 col-md-offset-3"}).append(
+                $('<div />', {class: "col-md-12"}).append(
+                  $('<h3 />', {text: "Step 3"}),
+                  $('<div />', {class: "form-group"}).append(
+                    $('<label />', {class: "col-sm-2 control-label", text: "Type"}),
+                    $('<div />', {class: "col-sm-10"}).append(
+                      $('<select />', {class: "form-control", required: "required", name: "type", id: "type"})
+                      /*.append(
+                       $('<option />', {value: "a1", text: "a1"}),
+                       $('<option />', {value: "a2", text: "a2"}),
+                       $('<option />', {value: "a3", text: "a3"})
+                       )
+                       */
+                    ),
+                    $('<label />', {class: "col-sm-2 control-label", text: "Enabled"}),
+                    $('<div />', {class: "col-sm-10"}).append(
+                      $('<input />', {
+                        id: "enabled",
+                        type: "checkbox",
+                        placeholder: "enabled",
+                        class: "col-sm-2 form-control",
+                        required: "required",
+                        maxlength: "200",
+                        name: "enabled"
+                      })
+                    ),
+                    $('<label />', {class: "col-sm-2 control-label", text: "fa"}),
+                    $('<div />', {class: "col-sm-10"}).append(
+                      $('<input />', {
+                        id: "fa",
+                        type: "text",
+                        placeholder: "fa",
+                        class: "form-control",
+                        required: "required",
+                        maxlength: "200",
+                        name: "fa"
+                      })
+                    )
+                  ),
+                  $('<button />', {type: "submit", class: "btn btn-success btn-lg pull-right", text: "Submit"})
+                )
+              )
+            )
+          )
+        )
+      )
+    );
+
+    /*container.append(
+     $('<form />', {
+     action: '/StartTraining/create',
+     method: 'POST',
+     role: "form",
+     class: "new form-horizontal",
+     autocomplete: "off"
+     }).append(
+     $('<div />', {class: "form-group"}).append(
+     $('<h2 />', {text: "Start Configuration"}),
+     $('<div />', {class: "container"}).append(
+     $('<div />', {class: "stepwizard col-md-offset-3"}).append(
+     $('<div />', {class: "stepwizard-row setup-panel"}).append(
+     $('<div />', {class: "stepwizard-step"}).append(
+     $('<a />', {
+     href: "#step-1",
+     type: "button",
+     class: "btn btn-circle btn-default btn-primary",
+     text: 1
+     }),
+     $('<p>Step 1</p>')
+     ),
+     $('<div />', {class: "stepwizard-step"}).append(
+     $('<a />', {
+     href: "#step-2",
+     type: "button",
+     class: "btn btn-circle btn-default btn-primary",
+     disable: "",
+     text: 2
+     }),
+     $('<p>Step 2</p>')
+     ),
+     $('<div />', {class: "stepwizard-step"}).append(
+     $('<a />', {
+     href: "#step-3",
+     type: "button",
+     class: "btn btn-circle btn-default btn-primary",
+     disable: "",
+     text: 3
+     }),
+     $('<p>Step 3</p>')
+     )
+     )
+     ),
+     $('<div />', {id: "step-1", class: "row setup-content", style: "display: block;"}).append(
+     $('<div />', {class: "col-xs-6 col-md-offset-3"}).append(
+     $('<div />', {class: "col-md-12"}).append(
+     $('<h3> Step 1</h3>'),
+     $('<div />', {class: "form-group"}).append(
+     $('<label class="col-sm-2 control-label">SensorsID</label>'),
+     $('<div />', {class: "col-sm-10"}).append(
+     $('<select />', {class: "form-control", required: "required", name: "SportType"}).append(
+     $('<option />', {value: "a1", text: "a1"}),
+     $('<option />', {value: "a2", text: "a2"}),
+     $('<option />', {value: "a3", text: "a3"})
+     )
+     )
+     ),
+     $('<button />', {type: "button", class: "btn btn-primary nextBtn btn-lg pull-right", text: "Next"})
+     )
+     )
+     ),
+     $('<div />', {id: "step-2", class: "row setup-content", style: "display: none;"}).append(
+     $('<div />', {class: "col-xs-6 col-md-offset-3"}).append(
+     $('<div />', {class: "col-md-12"}).append(
+     $('<h3 />', {text: "Step 2"}),
+     $('<div />', {class: "form-group"}).append(
+     $('<label />', {class: "col-sm-2 control-label", text: "PeersID"}),
+     $('<div />', {class: "col-sm-10"}).append(
+     $('<select />', {class: "form-control", required: "required", name: "Peers"}).append(
+     $('<option />', {value: "a1", text: "a1"}),
+     $('<option />', {value: "a2", text: "a2"}),
+     $('<option />', {value: "a3", text: "a3"})
+     )
+     )
+     ),
+     $('<button />', {type: "button", class: "btn btn-primary nextBtn btn-lg pull-right", text: "Next"})
+     )
+     )
+     ),
+     $('<div />', {id: "step-3", class: "row setup-content", style: "display: none;"}).append(
+     $('<div />', {class: "col-xs-6 col-md-offset-3"}).append(
+     $('<div />', {class: "col-md-12"}).append(
+     $('<h3> Step 3</h3>'),
+     $('<div />', {class: "form-group"}).append(
+     $('<label class="col-sm-2 control-label">Type</label>'),
+     $('<div />', {class: "col-sm-10"}).append(
+     $('<select />', {class: "form-control", required: "required", name: "Type"}).append(
+     $('<option />', {value: "a1", text: "a1"}),
+     $('<option />', {value: "a2", text: "a2"}),
+     $('<option />', {value: "a3", text: "a3"})
+     )
+     ),
+     $('<label class="col-sm-2 control-label">Enabled</label>'),
+     $('<div />', {class: "col-sm-10"}).append(
+     $('<input />', {
+     id: "tagsBoard",
+     type: "checkbox",
+     placeholder: "Board",
+     class: "col-sm-2 form-control",
+     required: "required",
+     maxlength: "200",
+     name: "Board"
+     })
+     ),
+     $('<label class="col-sm-2 control-label">fa</label>'),
+     $('<div />', {class: "col-sm-10"}).append(
+     $('<input />', {
+     id: "tagsBoard",
+     type: "text",
+     placeholder: "Board",
+     class: "form-control",
+     required: "required",
+     maxlength: "200",
+     name: "Board"
+     })
+     )
+     ),
+     $('<button />', {type: "submit", class: "btn btn-success btn-lg pull-right", text: "Submit"})
+     )
+     )
+     )
+     )
+     )
+     )
+     );*/
+
+    populateForm();
+
+    creatForm();
+  }
+</script>
+<script>
+  // http://jsfiddle.net/muJEu/169/
+  function isEmpty(o) {
+    for (var p in o) {
+      if (o.hasOwnProperty(p)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  function diffJSON(obj1, obj2) {
+    var ret = {}, rett;
+    for (var i in obj2) {
+      rett = {};
+      if (typeof obj2[i] === 'object') {
+        rett = diffJSON(obj1[i], obj2[i]);
+        if (!isEmpty(rett)) {
+          ret[i] = rett
+        }
+      } else {
+        // Inclui idPeer
+        if (!obj1 || !obj1.hasOwnProperty(i) || obj2[i] !== obj1[i] || i == 'idPeer') {
+          ret[i] = obj2[i];
+        }
+      }
+    }
+    return ret;
+  }
+</script>

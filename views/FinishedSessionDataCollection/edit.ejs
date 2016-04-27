@@ -1,0 +1,32 @@
+	<form action="/FinishedSessionDataCollection/update/<%=FinishedSessionDataCollection.id%>" method="POST" class="edit">
+	<div class="form-group">
+		<h2><%= __('editing a FinishedSessionDataCollection') %></h2>
+		<% if(flash && flash.err) { %>
+<ul class="alert alert-success">
+<% Object.keys(flash.err).forEach(function(error) { %>
+<li><%- JSON.stringify(flash.err[error]) %></li>
+<% }) %>
+</ul>
+<% } %>
+		
+	<div class="form-group" style="width: 400px;">
+	<label><%= __('Session Configuration Id') %></label>
+	<input value="<%= FinishedSessionDataCollection.SessionConfigurationId %>" name="SessionConfigurationId" type="text" class="form-control"/>
+	</div>
+
+	<div class="form-group" style="width: 400px;">
+	<label><%= __('Processed Results') %></label>
+	<input value="<%= FinishedSessionDataCollection.ProcessedResults %>" name="ProcessedResults" type="text" class="form-control"/>
+	</div>
+
+	<div class="form-group" style="width: 400px;">
+	<label><%= __('Collected Values') %></label>
+	<input value="<%= FinishedSessionDataCollection.CollectedValues %>" name="CollectedValues" type="text" class="form-control"/>
+	</div>
+
+		</div>
+		<input type="submit" value="<%= __('Update') %>" class="btn btn-default"/>
+		<a href="/FinishedSessionDataCollection/show/<%=FinishedSessionDataCollection.id %>" class="btn btn-danger"><%= __('Cancel') %></a>
+	</form>
+	
+	

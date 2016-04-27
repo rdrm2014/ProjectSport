@@ -1,0 +1,20 @@
+	<form action="/SessionType/update/<%=SessionType.id%>" method="POST" class="edit">
+	<div class="form-group">
+		<h2><%= __('editing a SessionType') %></h2>
+
+	<div class="form-group" style="width: 400px;">
+	<label><%= __('Name') %></label>
+	<input value="<%= SessionType.Name %>" name="Name" type="text" class="form-control"/>
+	</div>
+
+	<div class="form-group" style="width: 400px;">
+	<label><%= __('Description') %></label>
+	<input value="<%= SessionType.Description %>" name="Description" type="text" class="form-control"/>
+	</div>
+
+		</div>
+		<input type="submit" value="<%= __('Update') %>" class="btn btn-default"/>
+		<a href="/SessionType/show/<%=SessionType.id %>" class="btn btn-danger"><%= __('Cancel') %></a>
+	</form>
+	
+	

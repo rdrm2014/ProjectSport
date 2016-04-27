@@ -1,0 +1,20 @@
+<form action="/Trainer/create" method="POST" role="form" class="new">
+	<div class="form-group">
+	<h2><%= __('Create a Trainer') %></h2>
+
+	<div class="control-group" style = "width: 300px;">
+	<input type="text" class="form-control" placeholder="<%= __('Name') %>" name="Name">
+	</div>
+
+	<div class="control-group" style = "width: 300px;">
+	<input type="text" class="form-control" placeholder="<%= __('Birthday') %>" name="Birthday">
+	</div>
+
+	<div class="control-group" style = "width: 300px;">
+	<input type="text" class="form-control" placeholder="<%= __('Email') %>" name="Email">
+	</div>
+
+	</div>
+	<input type="submit" value="<%= __('Submit') %>" class="btn btn-default"/> |
+	<a href="/Trainer"><%= __('Back to list') %></a>
+</form>

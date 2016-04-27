@@ -1,0 +1,47 @@
+<!--<script src="/js/moment.js"></script>-->
+<script src="/js/bootstrap-datetimepicker.js"></script>
+<!--<link href="/styles/font-awesome.min.css" rel="stylesheet">-->
+<link href="/styles/bootstrap-datetimepicker.css" rel="stylesheet">
+<form action="/Athlete/update/<%= Athlete.id %>" method="POST" class="edit">
+    <div class="form-group">
+        <h2><%= __('editing a Athlete') %></h2>
+
+        <div class="form-group" style="width: 400px;">
+            <label><%= __('Name') %></label>
+            <input value="<%= Athlete.Name %>" name="Name" type="text" class="form-control"/>
+        </div>
+
+        <div class="form-group" style="width: 400px;">
+            <label><%= __('Birthday') %></label>
+
+            <div class="control-group" style="width: 400px;">
+                <div class='input-group date' id='datetimepicker1'>
+                    <input value="<%= Athlete.Birthday %>" type='datetime' class="form-control" name="Birthday"/>
+                    <!--<input type='text' class="form-control" name="Birthday"/>-->
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group" style="width: 400px;">
+            <label><%= __('Email') %></label>
+            <input value="<%= Athlete.Email %>" name="Email" type="text" class="form-control"/>
+        </div>
+
+    </div>
+    <input type="submit" value="<%= __('Update') %>" class="btn btn-default"/>
+    <a href="/Athlete/show/<%= Athlete.id %>" class="btn btn-danger"><%= __('Cancel') %></a>
+</form>
+<script type="text/javascript">
+    $(function () {
+        //$('#datetimepicker1').datepicker({
+            //language: 'de',
+            //todayhighlight: 'true'
+            //format: 'DD/MM/YYYY HH:mm'
+            //format: 'DD/MM/YYYY'
+        //});
+        $('#datetimepicker1').datetimepicker();
+    });
+</script>

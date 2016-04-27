@@ -1,0 +1,16 @@
+<form action="/TrackSessionConfiguration/create" method="POST" role="form" class="new">
+	<div class="form-group">
+	<h2><%= __('Create a TrackSessionConfiguration') %></h2>
+
+	<div class="control-group" style = "width: 300px;">
+	<input type="text" class="form-control" placeholder="<%= __('Board Track Session Id') %>" name="BoardTrackSessionId">
+	</div>
+
+	<div class="control-group" style = "width: 300px;">
+	<input type="text" class="form-control" placeholder="<%= __('Board Location') %>" name="BoardLocation">
+	</div>
+
+	</div>
+	<input type="submit" value="<%= __('Submit') %>" class="btn btn-default"/> |
+	<a href="/TrackSessionConfiguration"><%= __('Back to list') %></a>
+</form>

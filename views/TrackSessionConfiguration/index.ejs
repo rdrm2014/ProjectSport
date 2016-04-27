@@ -1,0 +1,76 @@
+<div class="container">
+  <h3><%= __('TrackSessionConfiguration Listing') %></h3>
+  <table class='table table-hover table-condensed'>
+    <tr>
+
+      <th><%= __('Board Track Session Id') %></th>
+
+      <th><%= __('Board Location') %></th>
+
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+    <% _.forEach(TrackSessionConfigurations, function(TrackSessionConfiguration) { %>
+    <tr data-id="<%= TrackSessionConfiguration.id %>" data-model="TrackSessionConfiguration">
+
+      <td><%= TrackSessionConfiguration.BoardTrackSessionId %></td>
+
+      <td><%= TrackSessionConfiguration.BoardLocation %></td>
+
+      <td><a href="/TrackSessionConfiguration/show/<%= TrackSessionConfiguration.id %>" class="btn btn-primary btn-sm"
+             role="button"><%= __('Show') %></a></td>
+      <td><a href="/TrackSessionConfiguration/edit/<%= TrackSessionConfiguration.id %>" class="btn btn-primary btn-sm"
+             role="button"><%= __('Edit') %></a></td>
+
+      <td>
+        <form action="/TrackSessionConfiguration/destroy/<%= TrackSessionConfiguration.id %>" method="POST">
+          <input type="hidden" name="_method" value="delete"/>
+          <input type="submit" value="<%= __('Delete') %>" class="btn btn-danger btn-sm" role="button"/>
+        </form>
+      </td>
+    </tr>
+    <% }) %>
+  </table>
+  <div class="text-center">
+    <nav>
+      <% if (pageCount > 1) { %>
+      <ul class="pagination">
+        <% if (currentPage > 1) { %>
+        <li>
+          <a href="?page=1" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+        </li>
+        <% } %>
+        <% var i = 1;
+          if (currentPage > 4) {
+            i = +currentPage - 3;
+          } %>
+        <% if (i !== 1) { %>
+        <li class="disabled"><a href="#">...</a></li>
+        <% } %>
+        <% for (i; i <= pageCount; i++) { %>
+        <% if (currentPage == i) { %>
+        <li class="active"><span><%= i %></span></li>
+        <% } else { %>
+        <li><a href="?page=<%= i %>"><%= i %></a></li>
+        <% } %>
+        <% if (i == (+currentPage + 3)) { %>
+        <li class="disabled"><a href="#">...</a></li>
+        <% break; } %>
+        <% } %>
+        <% if (currentPage != pageCount) { %>
+        <li>
+          <a href="?page=<%= pageCount %>" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+        <% } %>
+      </ul>
+      <% } %>
+    </nav>
+  </div>
+  <a href="/TrackSessionConfiguration/new/" class="btn btn-success btn-sm" role="button"><%= __('New') %></a> |
+  <a href="/"><%= __('all scaffolds') %></a>
+</div>

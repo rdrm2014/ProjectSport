@@ -1,0 +1,182 @@
+<script src="/js/d3.min.js"></script>
+<script src="/js/geral.js"></script>
+<style>
+    .rTableRow {
+        clear: both;
+    }
+
+    .rTableCell {
+        float: left;
+        padding: 3px 1.8%;
+    }
+    svg {
+        font: 10px sans-serif;
+    }
+
+    .line {
+        clip-path: url(#clip);
+        fill: none;
+        stroke: red;
+        stroke-width: 1.5px;
+    }
+
+    .axis path,
+    .axis line {
+        fill: none;
+        stroke: #000;
+        shape-rendering: crispEdges;
+    }
+
+    .brush .extent {
+        stroke: #fff;
+        fill-opacity: .125;
+        shape-rendering: crispEdges;
+    }
+</style>
+<div class="container">
+    <section class="main">
+        <div>
+            <h1><%= title %></h1>
+
+            <div class="rTable">
+                <div class="rTableRow">
+                    <div class="rTableCell"><select id="select_ID1"></select></div>
+                    <div class="rTableCell"><select id="select_SensorID1"></select></div>
+                    <div class="rTableCell">
+                        <button onclick="getData($('#select_ID1').val(), $('#select_SensorID1').val(), 5, draw, '#chart-container');">
+                            OK
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <br>
+        <svg id="chart-container"></svg>
+    </section>
+</div>
+<script>
+    function draw(result) {
+        var data = [];
+        result.forEach(function (d) {
+            data.push({"time": d["DataCollectionTime"], "value": d["DataCollectionValue"]});
+        });
+
+        var margin = {top: 10, right: 10, bottom: 100, left: 40};
+        var margin2 = {top: 430, right: 10, bottom: 20, left: 40};
+        var width = 960 - margin.left - margin.right;
+        var height = 500 - margin.top - margin.bottom;
+        var height2 = 500 - margin2.top - margin2.bottom;
+
+        var x = d3.scale.linear().range([0, width]);
+        var x2 = d3.scale.linear().range([0, width]);
+        var y = d3.scale.linear().range([height, 0]);
+        var y2 = d3.scale.linear().range([height2, 0]);
+
+        var xAxis = d3.svg.axis().scale(x).orient("bottom");
+        var xAxis2 = d3.svg.axis().scale(x2).orient("bottom");
+        var yAxis = d3.svg.axis().scale(y).orient("left");
+
+        var brush = d3.svg.brush()
+                .x(x2)
+                .on("brush", brushed);
+
+        var line = d3.svg.line()
+                .x(function (d) {
+                    return x(d.time);
+                })
+                .y(function (d) {
+                    return y(d.value);
+                })
+                .interpolate("monotone");
+
+        var line2 = d3.svg.line()
+                .x(function (d) {
+                    return x2(d.time);
+                })
+                .y(function (d) {
+                    return y2(d.value);
+                })
+                .interpolate("monotone");
+
+        d3.select("#chart-container").selectAll("*").remove();
+        var svg = d3.select("#chart-container")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom);
+
+        svg.append("defs").append("clipPath")
+                .attr("id", "clip")
+                .append("rect")
+                .attr("width", width)
+                .attr("height", height);
+
+        var focus = svg.append("g")
+                .attr("class", "focus")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        var context = svg.append("g")
+                .attr("class", "context")
+                .attr("transform", "translate(" + margin2.left + "," + margin2.top + ")");
+
+        x.domain(d3.extent(data.map(function (d) {
+            return d.time;
+        })));
+        y.domain([d3.min(data.map(function (d) {
+            return d.value;
+        })) - 10, d3.max(data.map(function (d) {
+            return d.value;
+        })) + 10]);
+        x2.domain(x.domain());
+        y2.domain(y.domain());
+
+        focus.append("path")
+                .datum(data)
+                .attr("class", "line")
+                .attr("d", line);
+
+        focus.append("g")
+                .attr("class", "x axis")
+                .attr("transform", "translate(0," + height + ")")
+                .call(xAxis);
+
+        focus.append("g")
+                .attr("class", "y axis")
+                .call(yAxis);
+
+        context.append("path")
+                .datum(data)
+                .attr("class", "line")
+                .attr("d", line2);
+
+        context.append("g")
+                .attr("class", "x axis")
+                .attr("transform", "translate(0," + height2 + ")")
+                .call(xAxis2);
+
+        context.append("g")
+                .attr("class", "x brush")
+                .call(brush)
+                .selectAll("rect")
+                .attr("y", -6)
+                .attr("height", height2 + 7);
+
+        function brushed() {
+            x.domain(brush.empty() ? x2.domain() : brush.extent());
+            focus.select(".line").attr("d", line);
+            focus.select(".x.axis").call(xAxis);
+        }
+    }
+</script>
+
+<script>
+    getData(40, 0, 5, draw, '#chart-container');
+</script>
+<script>
+    //INIT MAP
+    selectTrackSession("#select_ID1");
+
+    $("#select_ID1").change(function () {
+        $("#select_SensorID1").find('option').remove();
+        getListSensor("#select_SensorID1", $(this).val());
+    });
+</script>

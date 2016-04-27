@@ -1,0 +1,50 @@
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle pull-left" data-toggle="collapse" data-target="#navleft">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <button type="button" class="navbar-toggle pull-right" data-toggle="collapse" data-target="#navright">
+
+            </button>
+            <a class="navbar-brand" href="/"><%= __('Sport Project') %></a>
+        </div>
+        <div class="collapse hidden-md hidden-sm hidden-lg" id="navleft">
+            <ul class="nav navbar-nav">
+                <li><a href="#"><i class="icon-user"></i><%= __('Profile') %></a></li>
+                <li><a href="#"><i class="icon-cog"></i><%= __('Settings') %></a></li>
+                <li><a href="#"><i class="icon-info-sign"></i><%= __('Help') %></a></li>
+            </ul>
+        </div>
+        <div class="collapse hidden-md hidden-sm hidden-lg" id="navright">
+            <ul class="nav navbar-nav" role="menu" style="left: 0px;">
+                <li><a href="#"><i class="fa fa-user fa-fw"></i> <%= __('Profile') %></a></li>
+                <li><a href="#"><i class="fa fa-cog fa-fw"></i> <%= __('Settings') %></a></li>
+                <li><a href="#"><i class="fa fa-info fa-fw"></i> <%= __('Help') %></a></li>
+                <li><a href="auth/logout"><i class="fa fa-unlock fa-fw"></i> <%= __('Logout') %></a></li>
+            </ul>
+        </div>
+        <div class="collapse navbar-collapse navbar-right">
+            <ul class="nav navbar-nav">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="padding-top: 5px; padding-bottom: 5px; height: 50px;">
+                        <div class="portfo" style="vertical-align: middle; line-height: 40px; height: 40px;">
+                            <!--<img style=" vertical-align: middle; height: 40px;" src="<!--%= user.photo %->" alt="">-->
+                            <span><%= __('Welcome') %>,</span>
+                            <span id="nav_username"><!-- user.username --></span>
+                            <span class="fa fa-caret-down"></span></div>
+                    </a>
+                    <ul class="dropdown-menu" role="menu" id="navbar3">
+                        <li><a href="#"><i class="fa fa-user fa-fw"></i> <%= __('Profile') %></a></li>
+                        <li><a href="#"><i class="fa fa-cog fa-fw"></i> <%= __('Settings') %></a></li>
+                        <li><a href="#"><i class="fa fa-info fa-fw"></i> <%= __('Help') %></a></li>
+                        <li><a href="auth/logout"><i class="fa fa-unlock fa-fw"></i> <%= __('Logout') %></a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

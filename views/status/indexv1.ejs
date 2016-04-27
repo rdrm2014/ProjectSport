@@ -1,0 +1,131 @@
+<script src="/js/JSONFormatter.js"></script>
+<link rel="stylesheet" href="/styles/JSONFormatter.css">
+<div class="container">
+  <h1><%= title %></h1>
+  <hr>
+  <select name="listSerialPorts">
+    <% for(var i = 0; i < listSerialPorts.length; i++) { %>
+    <option value="<%= listSerialPorts[i].comName %>">
+      <%= listSerialPorts[i].comName %> : <%= listSerialPorts[i].manufacturer %>
+    </option>
+    <% } %>
+  </select>
+
+  <div id="listSensors" class="row">
+
+  </div>
+
+  <div class="row">
+    <button type="button" class="btn btn-default" onclick="updateSensors()">
+      <%= __('Update') %>
+    </button>
+  </div>
+</div>
+<script type="text/javascript">
+
+  function changeColor() {
+
+    $('.namePeerSensor').change(function () {
+      $(this).parent().css('color', ($(this).is(":checked") ? "green" : "red"));
+    });
+  }
+
+  createList("#listSensors", <%- JSON.stringify(listSensors) %>);
+
+  function createList(location, listSensors) {
+    JSONFormatter.format(listSensors[0], {
+      collapse: true, // Setting to 'true' this will format the JSON into a collapsable/expandable tree
+      appendTo: location, // A string of the id, class or element name to append the formatted json
+      list_id: 'json' // The name of the id at the root ul of the formatted JSON
+    });
+    /*var result = "";
+    console.log(JSON.stringify(listSensors));
+    var i, j, sensor, listSensorsS0, listPeers, listPeersSensors;
+    for (i in listSensors) {
+      result += '<div class="span12 nameSensorS0">';
+      result += '<h2>' + listSensors[i].id + '</h2>';
+      result += '<div class="listPeers">';
+      result += '<ul class="listPeersSensors" style="list-style-type:none;">';
+      for (j in listPeers = listSensors[i].listPeers) {
+        result += '<li><label style="color: ' + (JSON.parse(listPeers[j].listConf[0].enable) ? 'green' : 'red') + '">';
+        result += '<input class="namePeerSensor" type="checkbox" onclick="changeColor();"' + (JSON.parse(listPeers[j].listConf[0].enable) ? "checked" : "") + '> ' + listPeers[j].idPeer + '</label></li>';
+      }
+      result += '</ul>';
+      result += '</div></div>';
+    }
+     $(location).html(result);*/
+  }
+
+  function readList(location) {
+    var result = [];
+
+    /*var listPeers = [], sensors = {}, peer = {};
+     $(location + ' .nameSensorS0').each(function (a, b) {
+     listPeers = [];
+     $(b).children('.listPeers').children('.listPeersL').each(function (k, v) {
+     console.log($(b).text());
+     sensors = {};
+     $(v).children('.listPeersSensors').find('label').each(function (c, q) {
+     sensors[$(q).text()] = $(q).children('input').prop('checked');
+     });
+     peer = {};
+     //peer[$(v).children('.listPeersName').text()] = sensors;
+     peer[$(v).children('.listPeersName').text()] = sensors;
+     console.log();
+     listPeers.push(peer);
+     });
+     result.push({"id": $(b).children('h2').text(), "listPeers": listPeers});
+     });
+     return result;*/
+
+    var listPeers = [], sensors = {}, peer = {};
+    $(location + ' .nameSensorS0').each(function (a, b) {
+      listPeers = [];
+      $(b).children('.listPeers').each(function (k, v) {
+        sensors = {};
+        $(v).children('.listPeersSensors').find('label').each(function (c, q) {
+          //console.log($(q).text());
+          //console.log($(q).children('input').prop('checked'));
+          //sensors[$(q).text()] = $(q).children('input').prop('checked');
+          sensors["idPeer"] = $(q).text();
+          sensors["listConf"] = [{"enable":$(q).children('input').prop('checked')}];
+        });
+        //peer = {};
+        //peer[$(v).children('.listPeersName').text()] = sensors;
+        listPeers.push(sensors);
+      });
+      result.push({"id": $(b).children('h2').text(), "listPeers": listPeers});
+    });
+    //console.log(result);
+
+    //return JSON.stringify(result);
+    return result;
+  }
+  /*
+  {
+    "id": "1653518100", listPeers: [
+    {"idPeer": "X0", "type": "0A", "listConf": [{"enable": "true", "fa": "10"}]},
+    {"idPeer": "Y1", "type": "1B", "listConf": [{"enable": "false", "fa": "100"}]}
+  ]
+  }
+  */
+
+  function updateSensors() {
+    var list = readList("#listSensors");
+    //console.log(list);
+
+    $.ajax({
+      url: "/status/update",
+      type: "post",
+      data: {listSensors: list},
+      success: function (data, textStatus, jqXHR) {
+        // reescrever a lista
+        //console.log(data);
+        createList("#listSensors", data);
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        console.log("ERROR");
+      }
+    });
+  }
+</script>

@@ -1,0 +1,38 @@
+<script src="/js/moment.js"></script>
+<script src="/js/locale/pt.js"></script>
+<script src="/js/bootstrap-datetimepicker.js"></script>
+<link href="/styles/bootstrap-datetimepicker.css" rel="stylesheet">
+<!--<link href="/css/font-awesome.min.css" rel="stylesheet">-->
+<form action="/Athlete/create" method="POST" role="form" class="new">
+    <div class="form-group">
+        <h2><%= __('Create a Athlete') %></h2>
+
+        <div class="control-group" style="width: 300px;">
+            <input type="text" class="form-control" placeholder="<%= __('Name') %>" name="Name">
+        </div>
+
+        <div class="control-group" style="width: 300px;">
+            <div class='input-group date' id='datetimepicker1'>
+                <input type='text' class="form-control" name="<%= __('Birthday') %>"/>
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+            </div>
+        </div>
+
+        <div class="control-group" style="width: 300px;">
+            <input type="text" class="form-control" placeholder="<%= __('Email') %>" name="Email">
+        </div>
+
+    </div>
+    <input type="submit" value="<%= __('Submit') %>" class="btn btn-default"/> |
+    <a href="/Athlete"><%= __('Back to list') %></a>
+</form>
+<script type="text/javascript">
+    $(function () {
+        $('#datetimepicker1').datetimepicker({
+            defaultDate: new Date(),
+            locale: 'pt'
+        });
+    });
+</script>

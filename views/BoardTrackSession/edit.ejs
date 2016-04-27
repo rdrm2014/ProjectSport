@@ -1,0 +1,34 @@
+<form action="/BoardTrackSession/update/<%= BoardTrackSession.id %>" method="POST" class="edit">
+    <div class="form-group">
+        <h2><%= __('editing a BoardTrackSession') %></h2>
+
+        <div class="form-group" style="width: 400px;">
+            <label><%= __('Track Athlete Id') %></label>
+            <input value="<%= BoardTrackSession.TrackAthleteId %>" name="TrackAthleteId" type="text"
+                   class="form-control"/>
+        </div>
+
+        <div class="form-group" style="width: 400px;">
+            <label><%= __('Board Serial Number') %></label>
+            <input value="<%= BoardTrackSession.BoardSerialNumber %>" name="BoardSerialNumber" type="text"
+                   class="form-control"/>
+        </div>
+
+        <div class="form-group" style="width: 400px;">
+            <label><%= __('Board Location') %></label>
+            <input value="<%= BoardTrackSession.BoardLocation %>" name="BoardLocation" type="text"
+                   class="form-control"/>
+        </div>
+
+        <div class="form-group" style="width: 400px;">
+            <label><%= __('Board Detail Id') %></label>
+            <input value="<%= BoardTrackSession.BoardDetailId %>" name="BoardDetailId" type="text"
+                   class="form-control"/>
+        </div>
+
+    </div>
+    <input type="submit" value="<%= __('Update') %>" class="btn btn-default"/>
+    <a href="/BoardTrackSession/show/<%= BoardTrackSession.id %>" class="btn btn-danger"><%= __('Cancel') %></a>
+</form>
+	
+	

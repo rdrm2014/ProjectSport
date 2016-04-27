@@ -1,0 +1,24 @@
+<form action="/BoardTrackSession/create" method="POST" role="form" class="new">
+	<div class="form-group">
+	<h2><%= __('Create a BoardTrackSession') %></h2>
+
+	<div class="control-group" style = "width: 300px;">
+	<input type="text" class="form-control" placeholder="<%= __('Track Athlete Id') %>" name="TrackAthleteId">
+	</div>
+
+	<div class="control-group" style = "width: 300px;">
+	<input type="text" class="form-control" placeholder="<%= __('Board Serial Number') %>" name="BoardSerialNumber">
+	</div>
+
+	<div class="control-group" style = "width: 300px;">
+	<input type="text" class="form-control" placeholder="<%= __('Board Location') %>" name="BoardLocation">
+	</div>
+
+	<div class="control-group" style = "width: 300px;">
+	<input type="text" class="form-control" placeholder="<%= __('Board Detail Id') %>" name="BoardDetailId">
+	</div>
+
+	</div>
+	<input type="submit" value="<%= __('Submit') %>" class="btn btn-default"/> |
+	<a href="/BoardTrackSession"><%= __('Back to list') %></a>
+</form>

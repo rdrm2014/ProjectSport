@@ -1,0 +1,19 @@
+	<form action="/BoardDetail/update/<%=BoardDetail.id%>" method="POST" class="edit">
+	<div class="form-group">
+		<h2> <%= __('editing a BoardDetail') %> </h2>
+
+	<div class="form-group" style="width: 400px;">
+	<label><%= __('Manufactured Date') %></label>
+	<input value="<%= BoardDetail.ManufacturedDate %>" name="ManufacturedDate" type="text" class="form-control"/>
+	</div>
+
+	<div class="form-group" style="width: 400px;">
+	<label><%= __('Software Version') %></label>
+	<input value="<%= BoardDetail.SoftwareVersion %>" name="SoftwareVersion" type="text" class="form-control"/>
+	</div>
+		</div>
+		<input type="submit" value="<%= __('Update') %>" class="btn btn-default"/>
+		<a href="/BoardDetail/show/<%=BoardDetail.id %>" class="btn btn-danger"><%= __('Cancel') %></a>
+	</form>
+	
+	

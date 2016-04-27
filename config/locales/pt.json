@@ -1,0 +1,124 @@
+{
+  "Welcome": "Bem Vindo",
+  "A brand new app.": "Uma nova Aplicação.",
+
+  "Name":"Nome",
+  "Birthday":"Data de Nascimento",
+  "Email":"Email",
+
+  "editing a Athlete":"editar Atleta",
+  "Athlete Listing":"Listagem de Atletas",
+  "Create a Athlete": "Criar um Atleta",
+  "a Athlete":"o Atleta",
+
+
+  "Manufactured Date":"Data de Produção",
+  "Software Version":"Versão do Software",
+
+  "editing a BoardDetail":"editar Detalhes da Board",
+  "BoardDetail Listing":"Listagem de Boards",
+  "Create a BoardDetail":"Criar uma Board",
+  "a BoardDetail":"a Board",
+
+
+  "Track Athlete Id":"Id Track do Atleta",
+  "Board Serial Number":"Serial Number da Board",
+  "Board Location":"Localização da Board",
+  "Board Detail Id":"Id Detalhes da Board",
+
+  "editing a BoardTrackSession":"editar BoardTrackSession",
+  "BoardTrackSession Listing":"Listagem BoardTrackSession",
+  "Create a BoardTrackSession":"Criar uma BoardTrackSession",
+  "a BoardTrackSession":"a BoardTrackSession",
+
+
+  "Session Configuration Id":"Id Configuração da Sessão",
+  "Processed Results":"Resultados Processados",
+  "Collected Values":"Valores Recolhidos",
+
+  "editing a FinishedSessionDataCollection":"editar a FinishedSessionDataCollection",
+  "FinishedSessionDataCollection Listing":"Listagem de FinishedSessionDataCollection",
+  "Create a FinishedSessionDataCollection":"Criar uma FinishedSessionDataCollection",
+  "a FinishedSessionDataCollection":"a FinishedSessionDataCollection",
+
+
+  "Name":"Nome",
+  "Description":"Descrição",
+
+  "editing a InformationType":"editar Tipo de Informação",
+  "InformationType Listing":"Listagem Tipo de Informação",
+  "Create a InformationType":"Criar um Tipo Informação",
+  "a InformationType":"a Tipo de Informação",
+
+
+  "Track Session Configuration Id":"Id Configuração da Track Session",
+  "Data Collection Time":"Data Collection Time",
+  "Data Collection Value":"Data Collection Value",
+
+  "editing a OnGoingDataCollection":"editar a OnGoingDataCollection",
+  "OnGoingDataCollection Listing":"Listagem de OnGoingDataCollection",
+  "Create a OnGoingDataCollection":"Criar uma OnGoingDataCollection",
+  "a OnGoingDataCollection":"a OnGoingDataCollection",
+
+
+  "Name":"Nome",
+  "Description":"Descrição",
+
+  "editing a SessionType":"editar Tipo de Sessão",
+  "SessionType Listing":"Listagem Tipo de Sessão",
+  "Create a SessionType":"Criar um Tipo de Sessão",
+  "a SessionType":"a Tipo de Sessão",
+
+
+  "Name":"Name",
+  "Description":"Description",
+
+  "editing a SportType":"editar Tipo de Desporto",
+  "SportType Listing":"Listagem Tipo de Desporto",
+  "Create a SportType":"Criar Tipo de Desporto",
+  "a SportType":"a Tipo de Desporto",
+
+
+  "Session Id":"Id Sessão",
+  "Start Time":"Start Time",
+  "End Time":"End Time",
+  "Session Type Id":"Id Tipo Sessão",
+  "Sport Type Id":"Id Tipo Sessão",
+  "Athlete Id":"Id Athleta",
+
+  "editing a TrackAthlete":"editar Track do Atleta",
+  "TrackAthlete Listing":"Listagem Track dos Atletas",
+  "Create a TrackAthlete":"Criar um Track do Atleta",
+  "a TrackAthlete":"a Track do Atleta",
+
+
+  "Board Track Session Id":"Board Track Session Id",
+  "Board Location":"Board Location",
+
+  "editing a TrackSessionConfiguration":"editing a TrackSessionConfiguration",
+  "TrackSessionConfiguration Listing":"TrackSessionConfiguration Listing",
+  "Create a TrackSessionConfiguration":"Create a TrackSessionConfiguration",
+  "a TrackSessionConfiguration":"a TrackSessionConfiguration",
+
+
+  "Name":"Nome",
+  "Birthday":"Data de Nascimento",
+  "Email":"Email",
+
+  "editing a Trainer":"editar Treinador",
+  "Trainer Listing":"Listagem de Treinadores",
+  "Create a Trainer": "Criar um Treinador",
+  "a Trainer":"o Treinador",
+
+
+  "Show":"Mostrar",
+  "Edit":"Editar",
+  "New":"Novo",
+  "Update":"Atualizar",
+  "Cancel":"Cancelar",
+  "Delete":"Eliminar",
+  "Submit":"Submeter",
+  "Back to list":"Voltar à Lista",
+  "all scaffolds":"todas as listagens",
+  "":""
+}

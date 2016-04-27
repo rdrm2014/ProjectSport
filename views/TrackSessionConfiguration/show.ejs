@@ -1,0 +1,19 @@
+<form class="show">
+	<div class="form-group">
+		<h2><%= __('a TrackSessionConfiguration') %></h2>
+
+	<div class="form-group" style="width: 400px;">
+	<label><%= __('Board Track Session Id') %></label>
+	<input value="<%= TrackSessionConfiguration.BoardTrackSessionId %>" name="BoardTrackSessionId" type="text" class="form-control" disabled/>
+	</div>
+
+	<div class="form-group" style="width: 400px;">
+	<label><%= __('Board Location') %></label>
+	<input value="<%= TrackSessionConfiguration.BoardLocation %>" name="BoardLocation" type="text" class="form-control" disabled/>
+	</div>
+
+</div>
+</div>
+<a href="/TrackSessionConfiguration/edit/<%=TrackSessionConfiguration.id %>" class="btn btn-default"><%= __('Edit') %></a> |
+<a href="/TrackSessionConfiguration"><%= __('Back to list') %></a>
+</form>

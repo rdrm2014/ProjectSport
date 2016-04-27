@@ -1,0 +1,427 @@
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+<script src="/js/geral.js"></script>
+<script src='/js/mapbox.js'></script>
+<script src="/js/d3.min.js"></script>
+<!--STYLES-->
+<link href='https://api.tiles.mapbox.com/mapbox.js/v2.1.4/mapbox.css' rel='stylesheet'/>
+<link rel="stylesheet" href="/styles/slider.css">
+<link rel="stylesheet" type="text/css" media="all" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/base/jquery-ui.css">
+<link rel="stylesheet" type="text/css" media="all" href="http://fonts.googleapis.com/css?family=Acme">
+
+<style>
+    .rTableRow {
+        clear: both;
+    }
+
+    .rTableCell {
+        float: left;
+        padding: 3px 1.8%;
+    }
+    svg {
+        font: 10px sans-serif;
+    }
+
+    .line {
+        clip-path: url(#clip);
+        fill: none;
+        stroke-width: 1.5px;
+        stroke: steelblue;
+
+    }
+
+    .axis path,
+    .axis line {
+        fill: none;
+        stroke: #000;
+        shape-rendering: crispEdges;
+    }
+
+    .brush .extent {
+        stroke: #fff;
+        fill-opacity: .125;
+        shape-rendering: crispEdges;
+    }
+
+    .overlay {
+        fill: none;
+        pointer-events: all;
+    }
+
+    .focus circle {
+        fill: none;
+        stroke: steelblue;
+    }
+
+    .axis path,
+    .axis line {
+        fill: none;
+        stroke: #000;
+        shape-rendering: crispEdges;
+    }
+
+    .x.axis path {
+        display: none;
+    }
+
+    #map {
+        height: 500px;
+    }
+</style>
+<!--STYLES-->
+
+<div class="container">
+    <section class="main">
+        <div>
+            <h1><%= title %></h1>
+
+            <div class="rTable">
+                <div class="rTableRow">
+                    <div class="rTableCell"><select id="select_ID1"></select></div>
+                    <div class="rTableCell"><select id="select_SensorID1"></select></div>
+                    <div class="rTableCell">
+                        <button onclick="getData($('#select_ID1').val(), $('#select_SensorID1').val(), 1, callbackData);getData($('#select_ID1').val(), $('#select_SensorID1').val(), 2, draw);">
+                            OK
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="rTableRow">
+                <div id="defaultval">
+                    <span style="align:left;" id="currentval">0</span>
+                </div>
+                <div class="col-sm-3">
+                    <button type="button" id="play" class="btn btn-success">Play</button>
+                    <button type="button" id="pause" class="btn btn-info">Pause</button>
+                    <button type="button" id="stop" class="btn btn-danger">Stop</button>
+                </div>
+                <div class="col-sm-9">
+                    <div id="defaultslide"></div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <br>
+        <div class="col-sm-6">
+            <div id='map'></div>
+        </div>
+        <div class="col-sm-6">
+            <div id="chart-container"></div>
+        </div>
+    </section>
+</div>
+
+
+<!--SCRIPTS-->
+<script>
+    var marker;
+    var idMarker = 0;
+    var slider;
+    var sliderVel = 500;
+    var featureLayer;
+    var coordenates;
+    var geoJSON;
+
+    L.mapbox.accessToken = 'pk.eyJ1IjoicmljYXJkbzIwMTUiLCJhIjoiXzZ4YW4yYyJ9.zvOPYRixxGHhrGK4uGmOgw';
+
+    function callbackData(result) {
+        var center = result[0]["DataCollectionValue"].split(',');
+        var map = L.mapbox.map('map', 'examples.map-i86nkdio')
+                .setView([center[0], center[1]], 14);
+
+        coordenates = [];
+        result.forEach(function (d) {
+            var latlon = d["DataCollectionValue"].split(',');
+            coordenates.push([latlon[1], latlon[0]]);
+        });
+
+        geoJSON = {
+            "type": "Feature",
+            "geometry": {
+                "type": "LineString",
+                "coordinates": coordenates
+            },
+            "properties": {
+                "title": "Mapbox",
+                "description": "TESTE",
+                "style": {
+                    "color": "#004070",
+                    "weight": "4",
+                    "opacity": "0.9"
+                }
+            }
+        };
+
+        featureLayer = L.mapbox.featureLayer()
+                .setGeoJSON(geoJSON)
+                .addTo(map);
+
+        marker = L.marker(L.latLng(
+                coordenates[idMarker][1],
+                coordenates[idMarker][0]), {
+            icon: L.mapbox.marker.icon({
+                'marker-color': '#f86767'
+            })
+        });
+
+
+        slider = createSlider("#defaultslide", 0, coordenates.length);
+        slider.on("slide", function (event, ui) {
+            changeLocationMarker(ui.value);
+        });
+
+        marker.addTo(map);
+    }
+
+    function changeLocationMarker(id) {
+        $('#currentval').html(id);
+        marker.setLatLng(L.latLng(
+                coordenates[id][1],
+                coordenates[id][0]));
+        idMarker = id;
+    }
+
+</script>
+<script>
+    var playing = false;
+    setInterval(function () {
+        if (!playing)
+            return;
+        idMarker = ++idMarker % coordenates.length;
+        slider.slider('value', idMarker);
+        $('#currentval').html(idMarker);
+        changeLocationMarker(idMarker);
+    }, sliderVel);
+    $("#play").click(function () {
+        playing = true;
+    });
+    $("#pause").click(function () {
+        playing = false;
+    });
+    $("#stop").click(function () {
+        playing = false;
+        idMarker = 0;
+        slider.slider('value', idMarker);
+        $('#currentval').html(idMarker);
+        changeLocationMarker(idMarker);
+    });
+</script>
+<script>
+    function draw(result) {
+        //var i = 0;
+        var data = [];
+        result.forEach(function (d) {
+            var xyz = d["DataCollectionValue"].split(',');
+            data.push({
+                //time: i++,
+                time: d["DataCollectionTime"],
+                x: xyz[0],
+                y: xyz[1],
+                z: xyz[2]
+            });
+        });
+
+        var margin = {top: 10, right: 10, bottom: 100, left: 40};
+        var width = parseInt(d3.select("#chart-container").style("width")) - margin.left - margin.right;
+        var height = 500 - margin.top - margin.bottom;
+
+        var bisectDate = d3.bisector(function(d) { return d.time; }).left;
+        var x = d3.scale.linear().range([0, width]);
+        var y = d3.scale.linear().range([height, 0]);
+
+        var color = d3.scale.category10();
+
+        var xAxis = d3.svg.axis()
+                .scale(x)
+                .orient("bottom");
+
+        var yAxis = d3.svg.axis()
+                .scale(y)
+                .orient("left");
+
+        var line = d3.svg.line()
+                .interpolate("basis")
+                .x(function (d) {
+                    return x(d.time);
+                })
+                .y(function (d) {
+                    return y(d.value);
+                });
+
+        d3.select("#chart-container svg").remove();
+
+        var svg = d3.select("#chart-container").append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        color.domain(d3.keys(data[0]).filter(function (key) {
+            return key !== "time";
+        }));
+
+        var focus = svg.append("g")
+                .attr("class", "focus")
+                .style("display", "none");
+
+        focus.append("text")
+                .attr("class", "pointX")
+                .attr("x", 9)
+                .attr("y", 0);
+        focus.append("text")
+                .attr("class", "pointY")
+                .attr("x", 9)
+                .attr("y", 10);
+        focus.append("text")
+                .attr("class", "pointZ")
+                .attr("x", 9)
+                .attr("y", 20);
+
+        var axis = color.domain().map(function (name) {
+            return {
+                name: name,
+                values: data.map(function (d) {
+                    return {time: d.time, value: +d[name]};
+                })
+            };
+        });
+
+        x.domain(d3.extent(data, function (d) {
+            return d.time;
+        }));
+
+        y.domain([
+            d3.min(axis, function (c) {
+                return d3.min(c.values, function (v) {
+                    return v.value;
+                });
+            }),
+            d3.max(axis, function (c) {
+                return d3.max(c.values, function (v) {
+                    return v.value;
+                });
+            })
+        ]);
+
+        //Axis X
+        svg.append("g")
+                .attr("class", "x axis")
+                .attr("transform", "translate(0," + height + ")")
+                .call(xAxis)
+                .append("text")
+                .attr("x", width-50)
+                .attr("y", -10)
+                .attr("dy", ".71em")
+                .style("text-anchor", "end")
+                .text("Milisseconds(ms)");
+
+        //Axis Y
+        svg.append("g")
+                .attr("class", "y axis")
+                .call(yAxis)
+                .append("text")
+                .attr("transform", "rotate(-90)")
+                .attr("y", 6)
+                .attr("dy", ".71em")
+                .style("text-anchor", "end")
+                .text("Acceleration (g)");
+
+        // append the x line
+        focus.append("line")
+                .attr("class", "x")
+                .style("stroke", "red")
+                .style("stroke-dasharray", "3,3")
+                .style("opacity", 0.5)
+                .attr("y1", 0)
+                .attr("y2", height);
+
+        var lineAxis = svg.selectAll(".lineAxis")
+                .data(axis)
+                .enter().append("g")
+                .attr("class", "lineAxis");
+
+        lineAxis.append("path")
+                .attr("class", "line")
+                .attr("d", function (d) {
+                    return line(d.values);
+                })
+                .style("stroke", function (d) {
+                    return color(d.name);
+                });
+
+        lineAxis.append("text")
+                .datum(function (d) {
+                    return {name: d.name, value: d.values[d.values.length - 1]};
+                })
+                .attr("transform", function (d) {
+                    return "translate(" + x(d.value.time) + "," + y(d.value.value) + ")";
+                })
+                .attr("x", 3)
+                .attr("dy", ".35em")
+                .text(function (d) {
+                    return d.name;
+                });
+
+        // vertical line
+        svg.append("rect")
+                .attr("class", "overlay")
+                .attr("width", width)
+                .attr("height", height)
+                .on("mouseover", function() { focus.style("display", null); })
+                .on("mouseout", function() { focus.style("display", "none"); })
+                .on("mousemove", mousemove);
+
+        function mousemove() {
+            var x0 = x.invert(d3.mouse(this)[0]);
+            var i = bisectDate(data, x0, 1);
+
+            focus.attr("transform", "translate(" + x(data[i - 1].time) + ",0)");
+            focus.select(".pointX").text("x: " + data[i - 1].x);
+            focus.select(".pointY").text("y: " + data[i - 1].y);
+            focus.select(".pointZ").text("z: " + data[i - 1].z);
+        }
+
+        function resize(){
+            width = parseInt(d3.select("#chart-container").style("width")) - margin.left - margin.right;
+            height = 500 - margin.top - margin.bottom;
+
+            x = d3.scale.linear().range([0, width]);
+            y = d3.scale.linear().range([height, 0]);
+
+            svg = d3.select("#chart-container svg")
+                    .attr("width", width + margin.left + margin.right)
+                    .attr("height", height + margin.top + margin.bottom)
+                    .append("g")
+                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+            xAxis = d3.svg.axis()
+                    .scale(x);
+
+            yAxis = d3.svg.axis()
+                    .scale(y);
+
+            line = d3.svg.line()
+                    .x(function (d) {
+                        return x(d.time);
+                    })
+                    .y(function (d) {
+                        return y(d.value);
+                    });
+        }
+        d3.select(window).on('resize', resize);
+    }
+</script>
+
+
+<script>
+    getData(18, 0, 1, callbackData);
+    getData(40, 0, 2, draw);
+</script>
+<script>
+    //INIT MAP
+    selectTrackSession("#select_ID1");
+
+    $("#select_ID1").change(function () {
+        $("#select_SensorID1").find('option').remove();
+        getListSensor("#select_SensorID1", $(this).val());
+    });
+</script>

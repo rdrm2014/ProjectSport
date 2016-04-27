@@ -1,0 +1,18 @@
+<form class="show">
+	<div class="form-group">
+		<h2><%= __('a BoardDetail') %></h2>
+		
+	<div class="form-group" style="width: 400px;">
+	<label><%= __('Manufactured Date') %></label>
+	<input value="<%= BoardDetail.ManufacturedDate %>" name="ManufacturedDate" type="text" class="form-control" disabled/>
+	</div>
+
+	<div class="form-group" style="width: 400px;">
+	<label><%= __('Software Version') %></label>
+	<input value="<%= BoardDetail.SoftwareVersion %>" name="SoftwareVersion" type="text" class="form-control" disabled/>
+	</div>
+</div>
+</div>
+<a href="/BoardDetail/edit/<%=BoardDetail.id %>" class="btn btn-default"><%= __('Edit') %></a> |
+<a href="/BoardDetail"><%= __('Back to list') %></a>
+</form>
