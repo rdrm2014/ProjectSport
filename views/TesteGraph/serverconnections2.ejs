@@ -297,7 +297,6 @@
 //
 //  }, tv );
 
-
 //  setInterval(function () {
 //    random.removeData(seriesData);
 //    random.addData(seriesData);
@@ -307,7 +306,7 @@
 
   function addAnnotation(force) {
     if (messages.length > 0 && (force || Math.random() >= 0.95)) {
-      annotator.add(seriesData[2][seriesData[2].length - 1].x, messages.shift());
+      annotator.add(graph.series[0].data[graph.series[0].data.length - 1].x, messages.shift());
       annotator.update();
     }
   }
@@ -318,7 +317,7 @@
   }, 6000);
 
   var previewXAxis = new Rickshaw.Graph.Axis.Time({
-    graph: preview.previews[0],
+    graph: preview.graph,
     timeFixture: new Rickshaw.Fixtures.Time.Local(),
     ticksTreatment: ticksTreatment
   });
